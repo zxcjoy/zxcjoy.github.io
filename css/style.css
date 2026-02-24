@@ -312,6 +312,7 @@ a:hover { color: #fff; }
   padding: 1.2rem 0; border-bottom: 1px solid var(--border);
   font-size: 1rem;
 }
+.contact-info-list li:last-child { border-bottom: none; }
 .contact-icon {
   width: 44px; height: 44px; border-radius: 12px;
   background: rgba(0,212,255,0.1); display: flex; align-items: center;
