@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills — Chase (Ziyu) Chen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+  <div class="glow-orb"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo"><span>&lt;ZC /&gt;</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="experience.html">Experience</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="skills.html">Skills</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="main-content">
+    <section class="section">
+      <div class="section-header">
+        <div class="section-label">// skills & tech stack</div>
+        <h1 class="section-title">My Technical Arsenal</h1>
+        <p class="section-subtitle">A comprehensive look at the tools, languages, and frameworks I work with.</p>
+      </div>
+
+      <div class="grid-2">
+        <!-- Skill Bars -->
+        <div class="animate-on-scroll">
+          <div class="skill-category">
+            <h3>// Programming Languages</h3>
+            <div class="skill-item">
+              <div class="skill-label"><span>Python</span><span>95%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="95%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label"><span>SQL</span><span>90%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="90%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label"><span>R</span><span>80%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="80%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label"><span>JavaScript (React)</span><span>78%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="78%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label"><span>Java</span><span>65%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="65%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label"><span>MATLAB</span><span>60%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="60%"></div></div>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <h3>// AI & Machine Learning</h3>
+            <div class="skill-item">
+              <div class="skill-label"><span>Scikit-learn / XGBoost</span><span>92%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="92%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label"><span>LLMs / LangChain / RAG</span><span>88%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="88%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label"><span>PySpark / MapReduce</span><span>82%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="82%"></div></div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label"><span>Deep Learning</span><span>75%</span></div>
+              <div class="skill-bar"><div class="skill-fill" data-width="75%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Radar Chart -->
+        <div class="chart-container animate-on-scroll">
+          <h3>Core Competency Radar</h3>
+          <div class="chart-wrapper">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tools & Technologies Grid -->
+      <h2 style="font-size:1.8rem;margin:4rem 0 2rem;font-weight:800;text-align:center;">🛠️ Tools & Technologies</h2>
+      <div class="grid-4 animate-on-scroll">
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🐍</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">Python</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">LangChain · Flask · Dash · Selenium</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">⚛️</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">React</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">Frontend · SPA · Hooks</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🗃️</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">SQL & Databases</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">SQLite · PostgreSQL · HDFS</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">☁️</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">AWS</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">Certified · EC2 · S3 · Lambda</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🐳</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">Docker</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">Containerization · Deployment</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">⚡</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">Spark</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">PySpark · MapReduce · Big Data</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🔄</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">Airflow</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">Pipeline Orchestration</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">📊</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">Power BI</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">Dashboards · Business Intelligence</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🤖</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">GenAI / LLMs</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">RAG · LangChain · AI Agents</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🔬</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">A/B Testing</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">Hypothesis Testing · Experimentation</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">📈</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">Plotly / Dash</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">Interactive Visualization</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.5rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🐙</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">Git</div>
+          <div style="color:var(--text-muted);font-size:0.8rem;">Version Control · CI/CD</div>
+        </div>
+      </div>
+
+      <!-- Doughnut Charts Row -->
+      <h2 style="font-size:1.8rem;margin:4rem 0 2rem;font-weight:800;text-align:center;">📈 Skill Distribution</h2>
+      <div class="grid-3 animate-on-scroll">
+        <div class="chart-container">
+          <h3 style="text-align:center;">By Domain</h3>
+          <div class="chart-wrapper"><canvas id="domainChart"></canvas></div>
+        </div>
+        <div class="chart-container">
+          <h3 style="text-align:center;">Languages Used in Projects</h3>
+          <div class="chart-wrapper"><canvas id="langChart"></canvas></div>
+        </div>
+        <div class="chart-container">
+          <h3 style="text-align:center;">Project Focus Areas</h3>
+          <div class="chart-wrapper"><canvas id="focusChart"></canvas></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/zxcjoy" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/ziyuchen025/" target="_blank">LinkedIn</a>
+      <a href="mailto:zychen025@gmail.com">Email</a>
+    </div>
+    <p>Built with 🐾 by Claw · © 2026 Chase (Ziyu) Chen</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Chart.js config
+    Chart.defaults.color = '#a0a0b8';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+    Chart.defaults.font.family = "'Inter', sans-serif";
+
+    // Radar Chart
+    new Chart(document.getElementById('radarChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Machine Learning', 'Full-Stack Dev', 'Data Engineering', 'AI/LLMs', 'Cloud/DevOps', 'Data Viz', 'Statistics'],
+        datasets: [{
+          label: 'Proficiency',
+          data: [92, 80, 85, 88, 75, 88, 90],
+          backgroundColor: 'rgba(0, 212, 255, 0.15)',
+          borderColor: '#00d4ff',
+          pointBackgroundColor: '#00d4ff',
+          pointBorderColor: '#fff',
+          pointHoverRadius: 6,
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20, display: false }, grid: { color: 'rgba(255,255,255,0.05)' }, pointLabels: { font: { size: 11 } } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // Domain Doughnut
+    new Chart(document.getElementById('domainChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Data Science', 'AI/ML', 'Full-Stack', 'Data Engineering', 'Operations'],
+        datasets: [{ data: [30, 25, 20, 15, 10], backgroundColor: ['#00d4ff', '#7b2ff7', '#ff6b6b', '#00ff88', '#ffa502'], borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { padding: 15, font: { size: 11 } } } }, cutout: '65%' }
+    });
+
+    // Languages Doughnut
+    new Chart(document.getElementById('langChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Python', 'SQL', 'JavaScript', 'R', 'Java', 'Shell'],
+        datasets: [{ data: [40, 20, 15, 12, 8, 5], backgroundColor: ['#3572A5', '#00d4ff', '#f7df1e', '#276DC3', '#b07219', '#89e051'], borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { padding: 15, font: { size: 11 } } } }, cutout: '65%' }
+    });
+
+    // Focus Area Polar
+    new Chart(document.getElementById('focusChart'), {
+      type: 'polarArea',
+      data: {
+        labels: ['ML Models', 'Web Apps', 'ETL/Pipelines', 'Visualization', 'NLP/LLM', 'Database'],
+        datasets: [{ data: [9, 7, 7, 8, 8, 6], backgroundColor: ['rgba(0,212,255,0.6)', 'rgba(123,47,247,0.6)', 'rgba(0,255,136,0.6)', 'rgba(255,107,107,0.6)', 'rgba(255,165,2,0.6)', 'rgba(162,155,254,0.6)'], borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { padding: 15, font: { size: 11 } } } }, scales: { r: { ticks: { display: false }, grid: { color: 'rgba(255,255,255,0.05)' } } } }
+    });
+  </script>
+</body>
+</html>
