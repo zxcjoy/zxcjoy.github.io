@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>False Issue Detection — Chase (Ziyu) Chen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--text-secondary); font-size: 0.9rem;
+      margin-bottom: 2.5rem; transition: var(--transition);
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .project-hero-icon {
+      width: 72px; height: 72px; border-radius: 16px;
+      background: linear-gradient(135deg,#ff416c,#ff4b2b);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; margin-bottom: 1.5rem;
+      box-shadow: 0 0 40px rgba(255,65,108,0.25);
+    }
+    .project-hero-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800;
+      letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.2;
+    }
+    .project-hero-desc {
+      color: var(--text-secondary); font-size: 1.05rem;
+      max-width: 760px; line-height: 1.8; margin-bottom: 2rem;
+    }
+
+    /* Metrics */
+    .metric-card { text-align: center; }
+    .metric-val {
+      font-size: 2.4rem; font-weight: 800;
+      background: linear-gradient(135deg,#ff416c,#ff4b2b);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.2;
+    }
+    .metric-label {
+      color: var(--text-muted); font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem;
+    }
+
+    /* Detail section */
+    .detail-section { margin-bottom: 4rem; }
+    .detail-section h2 {
+      font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;
+      padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+    }
+    .detail-section .sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    /* Highlight box */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(255,65,108,0.04), rgba(255,75,43,0.04));
+      border: 1px solid rgba(255,65,108,0.15);
+      border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 2rem;
+    }
+    .highlight-box ul { list-style: none; }
+    .highlight-box ul li {
+      position: relative; padding-left: 1.4rem;
+      margin-bottom: 0.65rem; color: var(--text-secondary); font-size: 0.95rem;
+    }
+    .highlight-box ul li::before { content: '▸'; position: absolute; left: 0; color: #ff416c; }
+    .highlight-box ul li strong { color: var(--text-primary); }
+
+    /* Pipeline / ETL step */
+    .pipeline-phase {
+      background: rgba(255,65,108,0.04);
+      border: 1px solid rgba(255,65,108,0.12);
+      border-radius: var(--radius); padding: 1.5rem 1.5rem 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .phase-label {
+      font-family: var(--font-mono); font-size: 0.78rem;
+      color: #ff416c; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 1.2rem;
+    }
+    .pipeline-step {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1rem 1.2rem; border-radius: var(--radius-sm);
+      background: var(--bg-card); border: 1px solid var(--border);
+      margin-bottom: 0.8rem; transition: var(--transition);
+    }
+    .pipeline-step:hover { border-color: rgba(255,65,108,0.25); }
+    .step-num {
+      font-family: var(--font-mono); color: #ff416c;
+      font-size: 0.78rem; font-weight: 700; min-width: 55px; padding-top: 0.1rem;
+    }
+    .step-body h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .step-body p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+    .step-body .step-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .step-body .step-tag {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--text-muted); background: var(--bg-secondary);
+      padding: 0.15rem 0.6rem; border-radius: 50px; border: 1px solid var(--border);
+    }
+
+    /* Feature flag cards */
+    .flags-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .flag-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.2rem 1.4rem;
+      border-left: 3px solid #ff416c; transition: var(--transition);
+    }
+    .flag-card:hover { border-color: rgba(255,65,108,0.4); transform: translateY(-2px); }
+    .flag-card.novel { border-left-color: #ffd200; }
+    .flag-name {
+      font-family: var(--font-mono); font-size: 0.78rem; color: #ff416c;
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem;
+    }
+    .flag-card.novel .flag-name { color: #ffd200; }
+    .flag-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .flag-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
+    .flag-stat {
+      margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.78rem;
+      color: var(--text-muted); background: var(--bg-secondary);
+      padding: 0.3rem 0.7rem; border-radius: 6px; display: inline-block;
+    }
+    .flag-card.novel .flag-stat { color: #ffd200; }
+    .novel-badge {
+      display: inline-block; background: rgba(255,210,0,0.1);
+      border: 1px solid rgba(255,210,0,0.3); color: #ffd200;
+      font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.5rem;
+      border-radius: 4px; margin-left: 0.5rem; vertical-align: middle;
+      font-family: var(--font-mono); letter-spacing: 0.5px;
+    }
+
+    /* Masked result card */
+    .masked-card {
+      background: var(--bg-card); border: 1px solid rgba(255,65,108,0.2);
+      border-radius: var(--radius-sm); padding: 1.4rem 1.6rem;
+      margin-bottom: 1rem; position: relative; overflow: hidden;
+    }
+    .masked-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(135deg,#ff416c,#ff4b2b);
+    }
+    .masked-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.85rem;
+    }
+    .masked-row:last-child { border-bottom: none; }
+    .masked-label { color: var(--text-secondary); }
+    .masked-value { font-family: var(--font-mono); font-weight: 600; }
+    .masked-value.real { color: var(--accent); }
+    .masked-value.hidden {
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.06);
+      padding: 0.1rem 0.6rem; border-radius: 4px;
+      font-size: 0.75rem; letter-spacing: 1px;
+    }
+    .masked-note {
+      font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;
+      font-style: italic; display: flex; align-items: center; gap: 0.4rem;
+    }
+
+    /* Tech table */
+    .tech-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .tech-table td {
+      padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); vertical-align: top;
+    }
+    .tech-table td:first-child {
+      color: #ff416c; font-family: var(--font-mono);
+      font-size: 0.78rem; white-space: nowrap; min-width: 190px; font-weight: 600;
+    }
+    .tech-table tr:last-child td { border-bottom: none; }
+    .tech-table tr:hover td { background: rgba(255,65,108,0.02); }
+
+    @media (max-width: 768px) {
+      .flags-grid { grid-template-columns: 1fr; }
+      .pipeline-step { flex-direction: column; }
+      .step-num { min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+  <div class="glow-orb"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo"><span>&lt;ZC /&gt;</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="experience.html">Experience</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="skills.html">Skills</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="main-content">
+    <section class="section">
+
+      <a href="projects.html" class="back-link">← Back to Projects</a>
+
+      <!-- ── Hero ── -->
+      <div class="project-hero-icon">🔍</div>
+      <div class="section-label">// 2026 · Internal Tool — Last-Mile Logistics</div>
+      <h1 class="project-hero-title">False Issue Detection &amp; Courier Fraud Analytics Platform</h1>
+      <p class="project-hero-desc">
+        Designed and built a complete data intelligence system to detect false delivery failures (虚假问题件) by couriers in a last-mile logistics network — replacing a manual review process with algorithmic signal detection and per-agent performance dashboards. The pipeline ingests 2.3 GB of heterogeneous multi-source data, engineers 5 behavioral fraud signals using O(n log n) algorithms, and produces ranked courier leaderboards with quantified suspicion scores.
+      </p>
+      <div class="tags" style="margin-bottom:3.5rem;">
+        <span class="tag tag-accent">Python</span>
+        <span class="tag tag-accent">pandas</span>
+        <span class="tag tag-accent">NumPy</span>
+        <span class="tag tag-accent">SQLite · WAL</span>
+        <span class="tag">Feature Engineering</span>
+        <span class="tag">Anomaly Detection</span>
+        <span class="tag">Geospatial · Haversine</span>
+        <span class="tag">KMZ / KML Parsing</span>
+        <span class="tag">openpyxl</span>
+        <span class="tag">Temporal Join (merge_asof)</span>
+        <span class="tag">Sliding Window</span>
+        <span class="tag">Risk Scoring</span>
+      </div>
+
+      <!-- ── Key Metrics ── -->
+      <div class="grid-4" style="margin-bottom:4rem;">
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">2.3 GB</div>
+          <div class="metric-label">Multi-Source Data Ingested</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">113K+</div>
+          <div class="metric-label">Packages Analyzed</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">5</div>
+          <div class="metric-label">Behavioral Feature Flags</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">22,119</div>
+          <div class="metric-label">High-Risk Events Flagged</div>
+        </div>
+      </div>
+
+      <!-- ── System Architecture ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>System Architecture</h2>
+        <div class="sub">End-to-end pipeline from raw heterogeneous logistics data to per-agent fraud leaderboards</div>
+
+        <div class="pipeline-phase">
+          <div class="phase-label">⬡ ETL — Ingest &amp; Normalize</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">INGEST</div>
+            <div class="step-body">
+              <h4>Multi-Source ETL into 8-Table SQLite Schema</h4>
+              <p>Ingests 7 UTF-8 CSVs plus 1 KMZ geospatial file (2.3 GB total) into a normalized 8-table SQLite schema with WAL journaling and a 64 MB page cache. Composite index lookups across 1.18M trajectory events reduce query latency and enable fast analytical joins between package, trajectory, and redelivery tables.</p>
+              <div class="step-tags"><span class="step-tag">SQLite WAL</span><span class="step-tag">64 MB Page Cache</span><span class="step-tag">Composite Indexing</span><span class="step-tag">7 CSVs + 1 KMZ</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">DEDUP</div>
+            <div class="step-body">
+              <h4>Cross-File Deduplication — 38% Record Reduction</h4>
+              <p>Eliminated 38% of duplicate records (1.93M → 1.18M trajectory rows) by designing a cross-file deduplication strategy using composite <code>(tn, op_code, op_time)</code> keying across two overlapping source files. Ensures analytical integrity without data loss, producing a clean event sequence for downstream feature computation.</p>
+              <div class="step-tags"><span class="step-tag">Composite Key Dedup</span><span class="step-tag">1.93M → 1.18M rows</span><span class="step-tag">38% Reduction</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-phase">
+          <div class="phase-label">⬡ Feature Engineering — 5 Behavioral Fraud Signals</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">FLAGS</div>
+            <div class="step-body">
+              <h4>O(n log n) Sliding Window &amp; Temporal Join Algorithms</h4>
+              <p>All 5 feature flags are computed using NumPy <code>searchsorted</code> sliding windows and <code>pd.merge_asof</code> temporal joins — avoiding O(n²) brute-force approaches and scaling to 114,077 computable code-206 events with zero manual labeling. Each flag independently quantifies a distinct fraud behavior pattern.</p>
+              <div class="step-tags"><span class="step-tag">NumPy searchsorted</span><span class="step-tag">pd.merge_asof</span><span class="step-tag">O(n log n)</span><span class="step-tag">114,077 events</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">RISK</div>
+            <div class="step-body">
+              <h4>Composite Risk Scoring &amp; Per-Agent Leaderboards</h4>
+              <p>Each courier event receives a risk score equal to the number of flags triggered (0–5). Events with score ≥ 2 are classified high-risk (22,119 events). Outputs ranked per-dispatcher and per-courier leaderboards, enabling audit prioritization by quantified suspicion score rather than manual sampling.</p>
+              <div class="step-tags"><span class="step-tag">Risk Score 0–5</span><span class="step-tag">22,119 High-Risk Events</span><span class="step-tag">Per-Agent Ranking</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-phase">
+          <div class="phase-label">⬡ Geospatial &amp; Redelivery Analytics</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">GEO</div>
+            <div class="step-body">
+              <h4>Vectorized Haversine Proximity Engine</h4>
+              <p>Parses station coordinates from KMZ/KML, then implements a vectorized Haversine distance engine (R = 6,371 km) to flag delivery events within 0.5 km of a courier's own station — indicating possible non-attempt fraud at the facility. Produces a GeoJSON-compatible proximity report for spatial audit review.</p>
+              <div class="step-tags"><span class="step-tag">KMZ/KML Parsing</span><span class="step-tag">Haversine (R=6371 km)</span><span class="step-tag">0.5 km Threshold</span><span class="step-tag">Vectorized Proximity</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">REDLY</div>
+            <div class="step-body">
+              <h4>Per-Agent Redelivery Analytics</h4>
+              <p>Computes redelivery second-failure rates across 26,246 customer service tickets. High-volume agents (1,000+ tickets) are screened for statistically significant elevated rates using a baseline comparison, providing data-backed evidence for performance review without relying on manual sampling.</p>
+              <div class="step-tags"><span class="step-tag">26,246 CS Tickets</span><span class="step-tag">Second-Failure Rate</span><span class="step-tag">Baseline Comparison</span><span class="step-tag">Statistical Flagging</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">API</div>
+            <div class="step-body">
+              <h4>Package Lifecycle API — From Hours to Seconds</h4>
+              <p>A queryable <code>02_package_lifecycle.py</code> module reconstructs full chronological timelines per tracking number from 5 data sources, with human-readable flag explanations and JSON export. Reduces per-case investigation time from hours to seconds, enabling real-time audit support for operations teams.</p>
+              <div class="step-tags"><span class="step-tag">5 Data Sources</span><span class="step-tag">Chronological Timeline</span><span class="step-tag">JSON Export</span><span class="step-tag">Human-Readable Flags</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 5 Feature Flags ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>5 Behavioral Fraud-Detection Feature Flags</h2>
+        <div class="sub">Each flag independently signals a distinct courier fraud pattern — combined into a composite risk score</div>
+
+        <div class="flags-grid">
+          <div class="flag-card">
+            <div class="flag-name">Flag 01</div>
+            <div class="flag-title">High-Frequency Report</div>
+            <div class="flag-desc">Detects couriers filing an abnormally high number of false-issue reports within a short time window — a volume-based signal for batch-filing behavior.</div>
+            <div class="flag-stat">Sliding window · NumPy searchsorted</div>
+          </div>
+
+          <div class="flag-card">
+            <div class="flag-name">Flag 02</div>
+            <div class="flag-title">Quick-Fail</div>
+            <div class="flag-desc">Flags delivery failures filed suspiciously fast after a scan event — indicating the courier marked a package as failed without a genuine delivery attempt.</div>
+            <div class="flag-stat">Temporal join · pd.merge_asof</div>
+          </div>
+
+          <div class="flag-card">
+            <div class="flag-name">Flag 03</div>
+            <div class="flag-title">Business-Closed Holiday</div>
+            <div class="flag-desc">Identifies failures coded as "business closed" filed on public holidays or weekends — a calendar-based signal that the excuse is logistically implausible.</div>
+            <div class="flag-stat">Calendar lookup · op_code match</div>
+          </div>
+
+          <div class="flag-card">
+            <div class="flag-name">Flag 04</div>
+            <div class="flag-title">Near-Station</div>
+            <div class="flag-desc">Flags deliveries reported as failed while the GPS coordinates are within 0.5 km of the courier's own station — a geospatial signal for possible non-attempt at the facility.</div>
+            <div class="flag-stat">Haversine · vectorized proximity · 0.5 km threshold</div>
+          </div>
+
+          <div class="flag-card novel">
+            <div class="flag-name">Flag 05 <span class="novel-badge">NOVEL</span></div>
+            <div class="flag-title">Burst Failure</div>
+            <div class="flag-desc">Detects couriers who filed failures with zero successful deliveries in the surrounding ±30-minute window — surfacing a previously unmeasured batch-filing fraud pattern where entire route segments are marked failed without any genuine delivery attempt. Achieved the highest single-flag detection coverage among all five signals.</div>
+            <div class="flag-stat">±30-minute window · highest single-flag coverage</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Key Achievements ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Key Achievements</h2>
+        <div class="sub">Quantified technical outcomes across the full pipeline</div>
+        <div class="highlight-box">
+          <ul>
+            <li><strong>Normalized 2.3 GB</strong> of heterogeneous logistics data (7 CSVs + 1 KMZ) into a production-grade 8-table SQLite schema with WAL journaling and composite indexes — enabling sub-second analytical queries across 1.18M trajectory events.</li>
+            <li><strong>Eliminated 38% of duplicate records</strong> (1.93M → 1.18M trajectory rows) via cross-file composite key deduplication, ensuring clean event sequences for downstream feature computation without data loss.</li>
+            <li><strong>Engineered 5 behavioral fraud flags</strong> using O(n log n) NumPy <code>searchsorted</code> sliding windows and <code>pd.merge_asof</code> temporal joins — covering 114,077 computable events with zero manual labeling.</li>
+            <li><strong>Invented the "Burst Failure" signal</strong> — detecting events where couriers filed failures with zero successful deliveries within ±30 minutes — achieving the highest single-flag detection coverage with significant unique incremental reach not captured by any existing flag.</li>
+            <li><strong>Identified 22,119 high-risk courier events</strong> (risk score ≥ 2) and produced ranked per-dispatcher and per-courier leaderboards — replacing manual sampling with data-backed audit prioritization.</li>
+            <li><strong>Built a geospatial proximity detector</strong> parsing station coordinates from KMZ/KML and running vectorized Haversine calculations to flag delivery events within 0.5 km of a courier's own station — a spatial signal for non-attempt fraud at the facility.</li>
+            <li><strong>Delivered a queryable package lifecycle API</strong> reconstructing full timelines per tracking number from 5 sources — reducing per-case investigation time from hours to seconds.</li>
+            <li><strong>Exported structured outputs</strong> — 7-sheet XLSX, Markdown reports, CSVs — including overlap matrices, risk score distributions, and dispatch-party breakdowns for non-technical stakeholder consumption.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── Results (Masked) ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Analytical Outputs</h2>
+        <div class="sub">System-level results — company-specific service quality metrics are confidential</div>
+
+        <div class="masked-card">
+          <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;color:var(--text-primary);">Detection Coverage Summary</div>
+          <div class="masked-row">
+            <span class="masked-label">Total events analyzed</span>
+            <span class="masked-value hidden">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-row">
+            <span class="masked-label">High-risk events identified (score ≥ 2 flags)</span>
+            <span class="masked-value hidden">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-row">
+            <span class="masked-label">Burst Failure signal coverage</span>
+            <span class="masked-value hidden">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-row">
+            <span class="masked-label">Burst Failure unique incremental detection</span>
+            <span class="masked-value hidden">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-row">
+            <span class="masked-label">Near-station proximity events flagged</span>
+            <span class="masked-value hidden">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-row">
+            <span class="masked-label">Redelivery CS tickets analyzed</span>
+            <span class="masked-value hidden">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-note">
+            🔒 All operational metrics are withheld per internal data policy.
+          </div>
+        </div>
+
+        <div class="masked-card">
+          <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;color:var(--text-primary);">Per-Agent Performance Metrics</div>
+          <div class="masked-row">
+            <span class="masked-label">Baseline second-failure rate (all agents)</span>
+            <span class="masked-value hidden">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-row">
+            <span class="masked-label">High-volume agent elevated failure rate</span>
+            <span class="masked-value hidden">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-row">
+            <span class="masked-label">Flagged agents on ranked leaderboard</span>
+            <span class="masked-value hidden">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-row">
+            <span class="masked-label">Overall false-issue rate estimate</span>
+            <span class="masked-value hidden">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-note">
+            🔒 All operational metrics are withheld per internal data policy.
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Tech Stack ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Tech Stack</h2>
+        <div class="sub">Full breakdown of technologies used across ETL, feature engineering, geospatial, and reporting</div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="tech-table">
+            <tbody>
+              <tr>
+                <td>Language</td>
+                <td>Python 3.13</td>
+              </tr>
+              <tr>
+                <td>Data Engineering</td>
+                <td>pandas, NumPy, SQLite (WAL mode, PRAGMA tuning, composite indexing), chunked ETL, cross-file deduplication</td>
+              </tr>
+              <tr>
+                <td>Analytics &amp; Algorithms</td>
+                <td>Feature engineering, sliding window (NumPy searchsorted), temporal join (pd.merge_asof), behavioral risk scoring</td>
+              </tr>
+              <tr>
+                <td>Geospatial</td>
+                <td>KMZ/KML parsing, Haversine formula (R = 6,371 km), vectorized coordinate proximity detection</td>
+              </tr>
+              <tr>
+                <td>Output &amp; Reporting</td>
+                <td>openpyxl (7-sheet XLSX), Markdown, CSV, JSON, per-agent leaderboard generation</td>
+              </tr>
+              <tr>
+                <td>Core Competencies</td>
+                <td>Fraud / anomaly detection, behavioral signal design, ETL pipeline architecture, investigative analytics, scalable data processing</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Back ── -->
+      <div style="text-align:center;padding-top:2rem;">
+        <a href="projects.html" class="btn btn-outline">← Back to All Projects</a>
+      </div>
+
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/zxcjoy" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://www.linkedin.com/in/ziyuchen025/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="mailto:zychen025@gmail.com">Email</a>
+    </div>
+    <p>Built with 🐾 by Claw · © 2026 Chase (Ziyu) Chen</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

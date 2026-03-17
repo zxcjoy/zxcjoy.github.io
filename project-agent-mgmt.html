@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Management Platform — Chase (Ziyu) Chen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --accent-green: #43e97b;
+      --accent-teal: #38f9d7;
+      --accent-green-grad: linear-gradient(135deg, #43e97b, #38f9d7);
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--text-secondary); font-size: 0.9rem;
+      margin-bottom: 2.5rem; transition: var(--transition);
+    }
+    .back-link:hover { color: var(--accent-green); }
+
+    .project-hero-icon {
+      width: 72px; height: 72px; border-radius: 16px;
+      background: var(--accent-green-grad);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; margin-bottom: 1.5rem;
+      box-shadow: 0 0 40px rgba(67,233,123,0.2);
+    }
+    .project-hero-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800;
+      letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.2;
+    }
+    .project-hero-desc {
+      color: var(--text-secondary); font-size: 1.05rem;
+      max-width: 760px; line-height: 1.8; margin-bottom: 2rem;
+    }
+
+    /* Metrics */
+    .metric-card { text-align: center; }
+    .metric-val {
+      font-size: 2.4rem; font-weight: 800;
+      background: var(--accent-green-grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.2;
+    }
+    .metric-label {
+      color: var(--text-muted); font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem;
+    }
+
+    /* Detail section */
+    .detail-section { margin-bottom: 4rem; }
+    .detail-section h2 {
+      font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;
+      padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+    }
+    .detail-section .sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    /* Highlight box */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(67,233,123,0.04), rgba(56,249,215,0.04));
+      border: 1px solid rgba(67,233,123,0.15);
+      border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 2rem;
+    }
+    .highlight-box ul { list-style: none; }
+    .highlight-box ul li {
+      position: relative; padding-left: 1.4rem;
+      margin-bottom: 0.65rem; color: var(--text-secondary); font-size: 0.95rem;
+    }
+    .highlight-box ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent-green); }
+    .highlight-box ul li strong { color: var(--text-primary); }
+
+    /* Module cards (6 system modules) */
+    .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+    .module-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.4rem;
+      border-left: 3px solid var(--accent-green); transition: var(--transition);
+    }
+    .module-card:hover { border-color: rgba(67,233,123,0.3); transform: translateY(-2px); }
+    .module-num {
+      font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-green);
+      text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.4rem;
+    }
+    .module-title { font-size: 0.98rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .module-desc { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.65; }
+    .module-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.7rem; }
+    .module-tag {
+      font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);
+      background: var(--bg-secondary); padding: 0.12rem 0.55rem;
+      border-radius: 50px; border: 1px solid var(--border);
+    }
+    .module-stat {
+      display: inline-block; margin-top: 0.6rem;
+      background: rgba(67,233,123,0.08); border: 1px solid rgba(67,233,123,0.2);
+      color: var(--accent-green); font-family: var(--font-mono); font-size: 0.75rem;
+      padding: 0.2rem 0.7rem; border-radius: 6px;
+    }
+
+    /* ML model highlight */
+    .ml-highlight {
+      background: var(--bg-card); border: 1px solid rgba(67,233,123,0.2);
+      border-radius: var(--radius-sm); padding: 1.4rem 1.6rem;
+      margin-bottom: 1.5rem; position: relative; overflow: hidden;
+    }
+    .ml-highlight::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--accent-green-grad);
+    }
+    .ml-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.85rem;
+    }
+    .ml-row:last-child { border-bottom: none; }
+    .ml-label { color: var(--text-secondary); }
+    .ml-value { font-family: var(--font-mono); font-weight: 700; color: var(--accent-green); }
+
+    /* Masked rows */
+    .masked-value-conf {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      color: var(--text-muted); background: rgba(255,255,255,0.06);
+      padding: 0.1rem 0.6rem; border-radius: 4px; letter-spacing: 1px;
+    }
+    .masked-note {
+      font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;
+      font-style: italic; display: flex; align-items: center; gap: 0.4rem;
+    }
+
+    /* Tech table */
+    .tech-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .tech-table td {
+      padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); vertical-align: top;
+    }
+    .tech-table td:first-child {
+      color: var(--accent-green); font-family: var(--font-mono);
+      font-size: 0.78rem; white-space: nowrap; min-width: 190px; font-weight: 600;
+    }
+    .tech-table tr:last-child td { border-bottom: none; }
+    .tech-table tr:hover td { background: rgba(67,233,123,0.02); }
+
+    /* Architecture pipeline */
+    .pipeline-phase {
+      background: rgba(67,233,123,0.04);
+      border: 1px solid rgba(67,233,123,0.12);
+      border-radius: var(--radius); padding: 1.5rem 1.5rem 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .phase-label {
+      font-family: var(--font-mono); font-size: 0.78rem;
+      color: var(--accent-green); letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 1.2rem;
+    }
+    .pipeline-step {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1rem 1.2rem; border-radius: var(--radius-sm);
+      background: var(--bg-card); border: 1px solid var(--border);
+      margin-bottom: 0.8rem; transition: var(--transition);
+    }
+    .pipeline-step:hover { border-color: rgba(67,233,123,0.25); }
+    .step-num {
+      font-family: var(--font-mono); color: var(--accent-green);
+      font-size: 0.78rem; font-weight: 700; min-width: 55px; padding-top: 0.1rem;
+    }
+    .step-body h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .step-body p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+    .step-body .step-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .step-body .step-tag {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--text-muted); background: var(--bg-secondary);
+      padding: 0.15rem 0.6rem; border-radius: 50px; border: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+      .modules-grid { grid-template-columns: 1fr; }
+      .pipeline-step { flex-direction: column; }
+      .step-num { min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+  <div class="glow-orb"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo"><span>&lt;ZC /&gt;</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="experience.html">Experience</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="skills.html">Skills</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="main-content">
+    <section class="section">
+
+      <a href="projects.html" class="back-link">← Back to Projects</a>
+
+      <!-- ── Hero ── -->
+      <div class="project-hero-icon">📈</div>
+      <div class="section-label">// Jun — Aug 2025 · Internal Tool — CS Operations</div>
+      <h1 class="project-hero-title">Agent Management &amp; Workforce Analytics Platform</h1>
+      <p class="project-hero-desc">
+        A full-stack operational analytics platform automating weekly KPI reporting for outsourced customer service agent management. Integrates a 6-step ETL orchestration pipeline ingesting 7+ heterogeneous file types, an ML call-volume predictor (R²&gt;0.90), a 9-rule 4-week rolling trend classification engine, a Mixed-Integer Linear Program (MILP) for shift scheduling, and a 5-layer fuzzy name resolution system — all served through a Flask web interface with interactive Plotly and Chart.js dashboards.
+      </p>
+      <div class="tags" style="margin-bottom:3.5rem;">
+        <span class="tag tag-accent">Python</span>
+        <span class="tag tag-accent">scikit-learn</span>
+        <span class="tag tag-accent">PuLP (MILP)</span>
+        <span class="tag tag-accent">Flask · SQLAlchemy</span>
+        <span class="tag">pandas · NumPy</span>
+        <span class="tag">FuzzyWuzzy</span>
+        <span class="tag">Plotly · Chart.js</span>
+        <span class="tag">SQLite</span>
+        <span class="tag">Bootstrap 4</span>
+        <span class="tag">Linear Regression</span>
+        <span class="tag">ETL Pipeline</span>
+        <span class="tag">MILP Optimization</span>
+      </div>
+
+      <!-- ── Key Metrics ── -->
+      <div class="grid-4" style="margin-bottom:4rem;">
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">R²&gt;0.90</div>
+          <div class="metric-label">ML Predictor Accuracy</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">6-Step</div>
+          <div class="metric-label">ETL Pipeline</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">5-Layer</div>
+          <div class="metric-label">Fuzzy Name Resolver</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">MILP</div>
+          <div class="metric-label">Shift Optimization</div>
+        </div>
+      </div>
+
+      <!-- ── System Architecture ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>System Architecture</h2>
+        <div class="sub">6-step ETL feeding 6 analytical modules, served through a Flask web interface</div>
+
+        <div class="pipeline-phase">
+          <div class="phase-label">⬡ Data Layer — ETL &amp; Name Resolution</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">ETL</div>
+            <div class="step-body">
+              <h4>6-Step ETL Orchestration — 7+ File Types</h4>
+              <p>Ingests 7+ heterogeneous weekly file types (QP CSVs, Udesk/WhatsApp Excel exports, attendance reports) through a 6-step ETL pipeline and persists results into a normalized SQLite schema across 10+ SQLAlchemy models. Each step is independently rerunnable, with schema migration handled via SQLAlchemy ORM.</p>
+              <div class="step-tags"><span class="step-tag">7+ File Types</span><span class="step-tag">10+ ORM Models</span><span class="step-tag">SQLAlchemy</span><span class="step-tag">SQLite</span><span class="step-tag">Weekly Orchestration</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">FUZZ</div>
+            <div class="step-body">
+              <h4>5-Layer Fuzzy Name Resolution — &lt;5% Unmatched</h4>
+              <p>Resolves agent names across Hotline, Udesk, and WhatsApp QA channels using a cascade of five matching strategies: exact match → word-subset → name-swap → FuzzyWuzzy token ratio (threshold = 0.7) → manual fallback. Handles real-world variations like "Raquel Alberto Cazas" ↔ "Raquel Cazas", achieving &lt;5% unmatched rate across all channels without manual correction.</p>
+              <div class="step-tags"><span class="step-tag">FuzzyWuzzy</span><span class="step-tag">Threshold = 0.7</span><span class="step-tag">5-Layer Cascade</span><span class="step-tag">&lt;5% Unmatched</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-phase">
+          <div class="phase-label">⬡ Intelligence Layer — ML, Rules &amp; Optimization</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">ML</div>
+            <div class="step-body">
+              <h4>Call-Volume Predictor — scikit-learn Linear Regression, R²&gt;0.90</h4>
+              <p>Trains a scikit-learn linear regression model on package volume and AI control rate features to predict weekly hotline call volume. Achieves R²&gt;0.90 on held-out test data. Deployed as a Flask API endpoint with interactive 3D Plotly surface visualizations for stakeholder reporting — mapping the call-volume response surface across feature combinations.</p>
+              <div class="step-tags"><span class="step-tag">scikit-learn</span><span class="step-tag">Linear Regression</span><span class="step-tag">R²&gt;0.90</span><span class="step-tag">Flask API</span><span class="step-tag">3D Plotly Surface</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">RULES</div>
+            <div class="step-body">
+              <h4>9-Rule, 4-Week Rolling Trend Classification Engine</h4>
+              <p>Auto-classifies agents into Good / Warning / Disqualified tiers using a 9-rule engine evaluated over a 4-week rolling window. Rules fire on core KPI failure thresholds, service incident counts, and attendance patterns — replacing manual spreadsheet review with deterministic, auditable logic that produces a weekly ranked tier report.</p>
+              <div class="step-tags"><span class="step-tag">9 Classification Rules</span><span class="step-tag">4-Week Rolling Window</span><span class="step-tag">3-Tier Output</span><span class="step-tag">KPI Thresholds</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">MILP</div>
+            <div class="step-body">
+              <h4>Mixed-Integer Linear Program Shift Scheduler (PuLP)</h4>
+              <p>Formulates and solves a MILP using PuLP to generate minimum-headcount shift schedules covering a 12-hour operational window (09:00–21:00). Enforces split-shift constraints (≥1-hour break, 8-hour total shift), and outputs actionable Excel rosters. Objective: minimize total agents scheduled while satisfying per-hour demand constraints.</p>
+              <div class="step-tags"><span class="step-tag">PuLP MILP</span><span class="step-tag">Integer Programming</span><span class="step-tag">09:00–21:00 Window</span><span class="step-tag">Split-Shift Constraints</span><span class="step-tag">Excel Roster Output</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-phase">
+          <div class="phase-label">⬡ Presentation Layer — Dashboards &amp; Reporting</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">DASH</div>
+            <div class="step-body">
+              <h4>Work Order Analytics — Chart.js Drill-Down Dashboards</h4>
+              <p>Surfaces multi-dimensional work order trends across multiple source categories and geographic regions through interactive Chart.js drill-down dashboards with server-side aggregation in Flask. Enables data-driven weekly review cycles for non-technical operations managers without SQL access.</p>
+              <div class="step-tags"><span class="step-tag">Chart.js</span><span class="step-tag">Flask Aggregation</span><span class="step-tag">Multi-Dimensional</span><span class="step-tag">Drill-Down</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">KPI</div>
+            <div class="step-body">
+              <h4>Per-Agent KPI Dashboard &amp; Weekly Report Export</h4>
+              <p>Generates per-agent performance dashboards covering Hotline, Udesk, and WhatsApp QA channels, with weekly XLSX exports including agent tier rankings, KPI breakdowns, and attendance summaries — enabling managers to run performance reviews entirely from the platform without manual data collection.</p>
+              <div class="step-tags"><span class="step-tag">openpyxl</span><span class="step-tag">Multi-Channel KPIs</span><span class="step-tag">Bootstrap 4</span><span class="step-tag">Weekly Reporting</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 6 System Modules ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>6 Core System Modules</h2>
+        <div class="sub">Each module independently addresses a distinct operational analytics challenge</div>
+
+        <div class="modules-grid">
+          <div class="module-card">
+            <div class="module-num">Module 01</div>
+            <div class="module-title">ETL Orchestration Engine</div>
+            <div class="module-desc">6-step pipeline ingesting 7+ weekly file types into a normalized 10+ model SQLite schema. Each step is independently rerunnable with schema migrations managed via SQLAlchemy ORM.</div>
+            <div class="module-tags"><span class="module-tag">pandas</span><span class="module-tag">SQLAlchemy</span><span class="module-tag">SQLite</span><span class="module-tag">7+ file types</span></div>
+          </div>
+
+          <div class="module-card">
+            <div class="module-num">Module 02</div>
+            <div class="module-title">5-Layer Fuzzy Name Resolver</div>
+            <div class="module-desc">Cascade: exact → word-subset → name-swap → FuzzyWuzzy (threshold=0.7) → manual fallback. Handles real-world agent name variations across 3 CS platforms with &lt;5% unmatched rate.</div>
+            <div class="module-tags"><span class="module-tag">FuzzyWuzzy</span><span class="module-tag">String Matching</span><span class="module-tag">NLP</span></div>
+            <div class="module-stat">&lt;5% unmatched · threshold = 0.7</div>
+          </div>
+
+          <div class="module-card">
+            <div class="module-num">Module 03</div>
+            <div class="module-title">ML Call-Volume Predictor</div>
+            <div class="module-desc">scikit-learn linear regression trained on package volume and AI control rate features, deployed as a Flask API. Interactive 3D Plotly surface plots visualize the prediction response surface for stakeholder exploration.</div>
+            <div class="module-tags"><span class="module-tag">scikit-learn</span><span class="module-tag">Flask API</span><span class="module-tag">Plotly 3D</span></div>
+            <div class="module-stat">R² &gt; 0.90 on held-out test set</div>
+          </div>
+
+          <div class="module-card">
+            <div class="module-num">Module 04</div>
+            <div class="module-title">9-Rule Trend Classification Engine</div>
+            <div class="module-desc">Auto-classifies agents into Good / Warning / Disqualified over a 4-week rolling window using 9 deterministic rules covering KPI failures, service incidents, and attendance. Replaces manual spreadsheet review with auditable, reproducible logic.</div>
+            <div class="module-tags"><span class="module-tag">Rule Engine</span><span class="module-tag">Rolling Window</span><span class="module-tag">3-Tier Classification</span></div>
+            <div class="module-stat">9 rules · 4-week window</div>
+          </div>
+
+          <div class="module-card">
+            <div class="module-num">Module 05</div>
+            <div class="module-title">MILP Shift Scheduler</div>
+            <div class="module-desc">PuLP MILP formulation minimizing total headcount over a 12-hour window (09:00–21:00) with split-shift constraints (≥1-hr break, 8-hr total). Outputs actionable Excel rosters directly from the optimizer solution.</div>
+            <div class="module-tags"><span class="module-tag">PuLP</span><span class="module-tag">Integer Programming</span><span class="module-tag">openpyxl</span></div>
+            <div class="module-stat">MILP · minimize headcount · split-shift constraints</div>
+          </div>
+
+          <div class="module-card">
+            <div class="module-num">Module 06</div>
+            <div class="module-title">Work Order Analytics Dashboard</div>
+            <div class="module-desc">Chart.js drill-down dashboards with Flask server-side aggregation, surfacing trends across multiple source categories and geographic regions. Enables weekly data-driven review cycles for non-technical managers.</div>
+            <div class="module-tags"><span class="module-tag">Chart.js</span><span class="module-tag">Flask</span><span class="module-tag">Multi-Dimensional</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ML Model Detail ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>ML Model Details</h2>
+        <div class="sub">Call-volume predictor — scikit-learn linear regression</div>
+
+        <div class="ml-highlight">
+          <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;color:var(--text-primary);">Model Specification</div>
+          <div class="ml-row">
+            <span class="ml-label">Algorithm</span>
+            <span class="ml-value">Linear Regression (scikit-learn)</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">Target variable</span>
+            <span class="ml-value">Weekly hotline call volume</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">Feature set</span>
+            <span class="ml-value">Package volume · AI control rate</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">R² (held-out test set)</span>
+            <span class="ml-value">&gt; 0.90</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">Deployment</span>
+            <span class="ml-value">Flask REST API endpoint</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">Visualization</span>
+            <span class="ml-value">3D Plotly surface (feature × feature → prediction)</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">Training data volume</span>
+            <span class="masked-value-conf">[CONFIDENTIAL]</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">Prediction accuracy vs. actuals</span>
+            <span class="masked-value-conf">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-note" style="margin-top:0.5rem;">
+            🔒 Operational volume data withheld per internal data policy.
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Key Achievements ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Key Achievements</h2>
+        <div class="sub">Technical outcomes across all six system modules</div>
+        <div class="highlight-box">
+          <ul>
+            <li><strong>6-step ETL pipeline</strong> ingesting 7+ heterogeneous weekly file types (QP CSVs, Udesk/WhatsApp Excel, attendance reports) into a normalized 10+ model SQLAlchemy/SQLite schema — automating multi-source data integration that previously required manual consolidation.</li>
+            <li><strong>5-layer fuzzy name resolution</strong> (exact → word-subset → name-swap → FuzzyWuzzy, threshold=0.7) achieving &lt;5% unmatched agent records across Hotline, Udesk, and WhatsApp QA channels — eliminating cross-channel identity fragmentation without manual correction.</li>
+            <li><strong>ML call-volume predictor achieving R²&gt;0.90</strong> on held-out test data using scikit-learn linear regression on package volume and AI control rate features — deployed as a Flask API with interactive 3D Plotly surface visualizations.</li>
+            <li><strong>9-rule, 4-week rolling classification engine</strong> auto-classifying agents into Good / Warning / Disqualified tiers based on KPI failures, service incidents, and attendance — replacing manual spreadsheet review with deterministic, auditable logic.</li>
+            <li><strong>MILP shift scheduler (PuLP)</strong> minimizing total headcount across a 12-hour operational window (09:00–21:00) with split-shift constraints (≥1-hr break, 8-hr total) — outputting actionable Excel rosters directly from the optimizer solution.</li>
+            <li><strong>Chart.js drill-down dashboards</strong> with Flask server-side aggregation surfacing work order trends across multiple source categories and geographic regions — enabling non-technical managers to run weekly data-driven review cycles without SQL access.</li>
+            <li><strong>Operational impact</strong> — weekly KPI reporting effort, manager decision time, and shift scheduling time reduced significantly vs. prior manual process. Exact figures withheld per internal policy.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── Operational Impact (Masked) ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Operational Impact</h2>
+        <div class="sub">Business outcomes — specific metrics withheld per internal data policy</div>
+
+        <div class="ml-highlight">
+          <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;color:var(--text-primary);">Reported Improvements</div>
+          <div class="ml-row">
+            <span class="ml-label">Weekly KPI reporting effort reduction</span>
+            <span class="masked-value-conf">[CONFIDENTIAL]</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">Manager classification decision time reduction</span>
+            <span class="masked-value-conf">[CONFIDENTIAL]</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">Agent headcount covered by platform</span>
+            <span class="masked-value-conf">[CONFIDENTIAL]</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">CS channels integrated</span>
+            <span class="masked-value-conf">[CONFIDENTIAL]</span>
+          </div>
+          <div class="ml-row">
+            <span class="ml-label">Peak demand (agents/hr, MILP input)</span>
+            <span class="masked-value-conf">[CONFIDENTIAL]</span>
+          </div>
+          <div class="masked-note" style="margin-top:0.5rem;">
+            🔒 All operational metrics are withheld per internal data policy.
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Tech Stack ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Tech Stack</h2>
+        <div class="sub">Full breakdown across ETL, ML, optimization, web, and reporting</div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="tech-table">
+            <tbody>
+              <tr>
+                <td>Language</td>
+                <td>Python 3.x, JavaScript</td>
+              </tr>
+              <tr>
+                <td>ML / Data Science</td>
+                <td>scikit-learn (Linear Regression), pandas, NumPy, Matplotlib, Seaborn, Plotly (3D surface)</td>
+              </tr>
+              <tr>
+                <td>Optimization</td>
+                <td>PuLP (Mixed-Integer Linear Programming), MILP formulation with split-shift constraints</td>
+              </tr>
+              <tr>
+                <td>NLP / Matching</td>
+                <td>FuzzyWuzzy (token ratio, threshold=0.7), 5-layer fuzzy name resolution cascade</td>
+              </tr>
+              <tr>
+                <td>Web / Backend</td>
+                <td>Flask, SQLAlchemy ORM, Bootstrap 4, jQuery, Chart.js (drill-down dashboards)</td>
+              </tr>
+              <tr>
+                <td>Database / Storage</td>
+                <td>SQLite, SQLAlchemy (10+ models), openpyxl (Excel export)</td>
+              </tr>
+              <tr>
+                <td>Core Competencies</td>
+                <td>ETL pipeline design, ML model deployment, fuzzy string matching, MILP optimization, KPI dashboard development, multi-source data integration</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Back ── -->
+      <div style="text-align:center;padding-top:2rem;">
+        <a href="projects.html" class="btn btn-outline">← Back to All Projects</a>
+      </div>
+
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/zxcjoy" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://www.linkedin.com/in/ziyuchen025/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="mailto:zychen025@gmail.com">Email</a>
+    </div>
+    <p>Built with 🐾 by Claw · © 2026 Chase (Ziyu) Chen</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

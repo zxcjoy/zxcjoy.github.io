@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DNR Geo-Risk System — Chase (Ziyu) Chen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--text-secondary); font-size: 0.9rem;
+      margin-bottom: 2.5rem; transition: var(--transition);
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .project-hero-icon {
+      width: 72px; height: 72px; border-radius: 16px;
+      background: linear-gradient(135deg,#00b4d8,#0077b6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; margin-bottom: 1.5rem;
+      box-shadow: 0 0 40px rgba(0,180,216,0.25);
+    }
+
+    .project-hero-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800;
+      letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.2;
+    }
+
+    .project-hero-desc {
+      color: var(--text-secondary); font-size: 1.05rem;
+      max-width: 760px; line-height: 1.8; margin-bottom: 2rem;
+    }
+
+    /* Metrics */
+    .metric-card { text-align: center; }
+    .metric-val {
+      font-size: 2.4rem; font-weight: 800;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.2;
+    }
+    .metric-label {
+      color: var(--text-muted); font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem;
+    }
+
+    /* Pipeline */
+    .pipeline-phase {
+      background: rgba(0,212,255,0.04);
+      border: 1px solid rgba(0,212,255,0.12);
+      border-radius: var(--radius); padding: 1.5rem 1.5rem 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .pipeline-phase.phase2 {
+      background: rgba(123,47,247,0.04);
+      border-color: rgba(123,47,247,0.12);
+    }
+    .phase-label {
+      font-family: var(--font-mono); font-size: 0.78rem;
+      color: var(--accent); letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .phase-label.phase2 { color: var(--accent2); }
+
+    .pipeline-step {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1rem 1.2rem; border-radius: var(--radius-sm);
+      background: var(--bg-card); border: 1px solid var(--border);
+      margin-bottom: 0.8rem; transition: var(--transition);
+    }
+    .pipeline-step:hover { border-color: rgba(0,212,255,0.2); }
+    .step-num {
+      font-family: var(--font-mono); color: var(--accent);
+      font-size: 0.78rem; font-weight: 700; min-width: 50px; padding-top: 0.1rem;
+    }
+    .step-body h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .step-body p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+    .step-body .step-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .step-body .step-tag {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--text-muted); background: var(--bg-secondary);
+      padding: 0.15rem 0.6rem; border-radius: 50px; border: 1px solid var(--border);
+    }
+
+    /* Feature Score Cards */
+    .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
+    .score-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.2rem 1.4rem;
+    }
+    .score-card-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .score-card-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+    .score-range {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      color: var(--accent); margin-top: 0.5rem;
+    }
+
+    /* Tech Table */
+    .tech-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .tech-table td {
+      padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); vertical-align: top;
+    }
+    .tech-table td:first-child {
+      color: var(--accent); font-family: var(--font-mono);
+      font-size: 0.78rem; white-space: nowrap; min-width: 190px; font-weight: 600;
+    }
+    .tech-table tr:last-child td { border-bottom: none; }
+    .tech-table tr:hover td { background: rgba(0,212,255,0.02); }
+
+    /* Section dividers */
+    .detail-section { margin-bottom: 4rem; }
+    .detail-section h2 {
+      font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;
+      padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+    }
+    .detail-section .sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    /* Highlight box */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(123,47,247,0.05));
+      border: 1px solid rgba(0,212,255,0.12);
+      border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 2rem;
+    }
+    .highlight-box ul { list-style: none; }
+    .highlight-box ul li {
+      position: relative; padding-left: 1.4rem;
+      margin-bottom: 0.65rem; color: var(--text-secondary); font-size: 0.95rem;
+    }
+    .highlight-box ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); }
+    .highlight-box ul li strong { color: var(--text-primary); }
+
+    @media (max-width: 768px) {
+      .pipeline-step { flex-direction: column; gap: 0.4rem; }
+      .step-num { min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+  <div class="glow-orb"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo"><span>&lt;ZC /&gt;</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="experience.html">Experience</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="skills.html">Skills</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="main-content">
+    <section class="section">
+
+      <a href="projects.html" class="back-link">← Back to Projects</a>
+
+      <!-- ── Hero ── -->
+      <div class="project-hero-icon">🗺️</div>
+      <div class="section-label">// Jan 2026 · Personal Project</div>
+      <h1 class="project-hero-title">DNR Geospatial Risk Intelligence System</h1>
+      <p class="project-hero-desc">
+        An end-to-end geospatial machine learning pipeline for predicting last-mile delivery failure (DNR — Delivered Not Received) risk across New York City. The system integrates Google Maps API geocoding, H3 spatial hotspot detection, config-driven feature engineering, and XGBoost + SHAP explainability — all orchestrated through a modular 9-command CLI with a SQLite caching layer.
+      </p>
+      <div class="tags" style="margin-bottom:3.5rem;">
+        <span class="tag tag-accent">Python</span>
+        <span class="tag tag-accent">XGBoost</span>
+        <span class="tag tag-accent">SHAP</span>
+        <span class="tag tag-accent">H3 Geohashing</span>
+        <span class="tag">Google Maps API</span>
+        <span class="tag">Google Places API</span>
+        <span class="tag">Google Roads API</span>
+        <span class="tag">SQLite · SQLAlchemy</span>
+        <span class="tag">Apache Parquet</span>
+        <span class="tag">Folium</span>
+        <span class="tag">Click CLI</span>
+        <span class="tag">scikit-learn</span>
+        <span class="tag">YAML Config</span>
+        <span class="tag">pytest</span>
+      </div>
+
+      <!-- ── Key Metrics ── -->
+      <div class="grid-4" style="margin-bottom:4rem;">
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">10K+</div>
+          <div class="metric-label">Delivery Records Processed</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">50+</div>
+          <div class="metric-label">Engineered Features</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">99.6%</div>
+          <div class="metric-label">Rooftop Geocoding Precision</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">9</div>
+          <div class="metric-label">Modular CLI Commands</div>
+        </div>
+      </div>
+
+      <!-- ── Overview ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Overview</h2>
+        <div class="sub">What the system does and why it matters</div>
+        <div class="highlight-box">
+          <ul>
+            <li><strong>Problem:</strong> NYC last-mile carriers face significant losses from DNR disputes — where customers claim packages were not received despite a delivery scan. Identifying high-risk addresses and zones before dispatch is critical.</li>
+            <li><strong>Approach:</strong> Built a two-phase pipeline — Phase 1 handles API-heavy geocoding and enrichment with full caching; Phase 2 runs CPU-bound scoring, hotspot detection, and ML modeling without additional API spend.</li>
+            <li><strong>Output:</strong> Each address receives a complete risk profile: 4 composite risk scores (0–100), an H3 spatial hotspot flag, a binary DNR probability from XGBoost, and SHAP explanations identifying the top contributing risk factors.</li>
+            <li><strong>Design philosophy:</strong> Config-driven and modular — <code>weights.yaml</code> controls scoring formulas, <code>poi_taxonomy.yaml</code> defines POI categories, and each pipeline step can be toggled or rerun independently.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── Pipeline Architecture ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Pipeline Architecture</h2>
+        <div class="sub">9-step, two-phase workflow from raw CSV to actionable risk intelligence</div>
+
+        <!-- Phase 1 -->
+        <div class="pipeline-phase">
+          <div class="phase-label">⬡ Phase 1 — Data Processing (API-Heavy, Cached)</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">STEP 01</div>
+            <div class="step-body">
+              <h4>Ingest &amp; Clean</h4>
+              <p>Standardizes raw CSV columns, removes invalid records, deduplicates tracking IDs, and constructs a full_address string. Outputs a clean <code>deliveries</code> table (~10K records).</p>
+              <div class="step-tags"><span class="step-tag">Pandas</span><span class="step-tag">SQLAlchemy ORM</span><span class="step-tag">Click CLI</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">STEP 02</div>
+            <div class="step-body">
+              <h4>Geocode</h4>
+              <p>Extracts ~5K unique addresses and resolves each to lat/lng, place_id, and a location_type (ROOFTOP → APPROXIMATE) via the Google Geocoding API. A fingerprint-based SQLite cache (180-day TTL) eliminates redundant API calls on reruns — achieving 0 API calls after the first pass.</p>
+              <div class="step-tags"><span class="step-tag">Google Geocoding API</span><span class="step-tag">SQLite Cache</span><span class="step-tag">MD5 Fingerprint</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="pipeline-phase phase2">
+          <div class="phase-label phase2">⬡ Phase 2 — Analysis (CPU-Bound, No API Calls)</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">STEP 03</div>
+            <div class="step-body">
+              <h4>Address Validation</h4>
+              <p>Conditionally runs the Google Address Validation API on multi-unit addresses or DNR-flagged records. Checks for missing subpremise info and sets a <code>structural_misdelivery_risk</code> baseline.</p>
+              <div class="step-tags"><span class="step-tag">Google Address Validation API</span><span class="step-tag">Conditional Logic</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">STEP 04</div>
+            <div class="step-body">
+              <h4>Roads Snap</h4>
+              <p>For addresses below ROOFTOP precision, snaps coordinates to the nearest road using the Google Roads API. Computes <code>offset_to_road_m</code> — a proxy for access complexity — while skipping the call for already-precise addresses to save API cost.</p>
+              <div class="step-tags"><span class="step-tag">Google Roads API</span><span class="step-tag">Cost-Aware Routing</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">STEP 05</div>
+            <div class="step-body">
+              <h4>Places POI Enrichment</h4>
+              <p>Queries Google Places API at 200m and 500m radii around each address to count nearby points of interest. Categories are defined in <code>poi_taxonomy.yaml</code>: educational, medical, commercial, and high-mobility (transit, cafes, parks) — inputs to the porch piracy vulnerability score.</p>
+              <div class="step-tags"><span class="step-tag">Google Places API</span><span class="step-tag">poi_taxonomy.yaml</span><span class="step-tag">200m / 500m Radius</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">STEP 06</div>
+            <div class="step-body">
+              <h4>Risk Scoring</h4>
+              <p>Computes four composite risk scores (each normalized to 0–100) using weighted formulas defined in <code>weights.yaml</code>. Scores are fully configurable without code changes.</p>
+              <div class="step-tags"><span class="step-tag">weights.yaml</span><span class="step-tag">Min-Max Normalization</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">STEP 07</div>
+            <div class="step-body">
+              <h4>Hotspot Detection</h4>
+              <p>Aggregates delivery records into H3 grid cells (resolution 9 ≈ ~0.1 km²). Applies Laplace smoothing to DNR rates, then Z-score thresholding (z ≥ 1.96, 95% confidence) to flag blacklist zones. Outputs 37 statistically significant micro-hotspot cells as GeoJSON for routing integration.</p>
+              <div class="step-tags"><span class="step-tag">H3 Geohash (Uber)</span><span class="step-tag">Laplace Smoothing</span><span class="step-tag">Z-Score Thresholding</span><span class="step-tag">GeoJSON</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">STEP 08</div>
+            <div class="step-body">
+              <h4>Predictive Modeling</h4>
+              <p>Trains an XGBoost binary classifier (with <code>scale_pos_weight</code> for class imbalance) on the full feature store. SHAP TreeExplainer generates per-prediction force plots and global feature importance rankings. Metrics include AUC, PR-AUC, and calibration checks.</p>
+              <div class="step-tags"><span class="step-tag">XGBoost</span><span class="step-tag">SHAP TreeExplainer</span><span class="step-tag">Logistic Regression (Baseline)</span><span class="step-tag">Class Imbalance Correction</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">STEP 09</div>
+            <div class="step-body">
+              <h4>Reporting</h4>
+              <p>Exports the full address feature store as Parquet, hotspot GeoJSON, model metrics JSON, SHAP summary CSV, and interactive Folium HTML maps — ready for stakeholder delivery or routing system ingestion.</p>
+              <div class="step-tags"><span class="step-tag">Apache Parquet</span><span class="step-tag">Folium</span><span class="step-tag">GeoJSON</span><span class="step-tag">Interactive Maps</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Risk Scores ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Composite Risk Scores</h2>
+        <div class="sub">Four address-level risk dimensions, each normalized to a 0–100 scale</div>
+        <div class="score-grid">
+          <div class="score-card">
+            <div class="score-card-name">🔵 Geo Reliability</div>
+            <div class="score-card-desc">Reflects geocoding precision. ROOFTOP scores highest; approximate or interpolated results indicate structural ambiguity in the address.</div>
+            <div class="score-range">Input: location_type from Geocoding API</div>
+          </div>
+          <div class="score-card">
+            <div class="score-card-name">🟠 Structural Misdelivery Risk</div>
+            <div class="score-card-desc">Captures address structural issues — missing apartment/unit info, incomplete subpremise data, or addresses flagged by the Validation API.</div>
+            <div class="score-range">Input: Validation API + geocoding metadata</div>
+          </div>
+          <div class="score-card">
+            <div class="score-card-name">🟡 Access Complexity Index</div>
+            <div class="score-card-desc">Measures physical access difficulty using road offset distance. Addresses far from snapped road coordinates suggest gated, private, or hard-to-reach locations.</div>
+            <div class="score-range">Input: Roads API offset_to_road_m</div>
+          </div>
+          <div class="score-card">
+            <div class="score-card-name">🔴 Porch Piracy Vulnerability</div>
+            <div class="score-card-desc">Estimates theft exposure based on high-mobility POI density — transit hubs, commercial centers, and foot-traffic generators within 200–500m of the delivery address.</div>
+            <div class="score-range">Input: Places API POI counts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Key Achievements ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Key Achievements</h2>
+        <div class="sub">Quantified outcomes from the pipeline</div>
+        <div class="highlight-box">
+          <ul>
+            <li><strong>100% geocoding coverage</strong> across 5K unique NYC addresses — 99.6% at ROOFTOP precision (Google's highest-accuracy tier).</li>
+            <li><strong>Zero redundant API calls</strong> on pipeline reruns, achieved via an MD5 fingerprint-based SQLite cache with a 180-day TTL.</li>
+            <li><strong>50+ features</strong> per address stored in a Parquet feature store, combining geocoding metadata, POI density, road proximity, and spatial aggregation signals.</li>
+            <li><strong>37 H3 hotspot cells</strong> identified at 95% statistical confidence (z ≥ 1.96), covering zones with DNR rates up to 3.6× the citywide baseline.</li>
+            <li><strong>Per-prediction SHAP explanations</strong> surfaced in interactive HTML reports (165–242 KB), revealing the top geographic risk drivers for non-technical stakeholders.</li>
+            <li><strong>Modular two-phase CLI</strong> with 9 commands — clean separation of API-heavy Phase 1 and CPU-bound Phase 2 enables incremental reruns without redundant API spend.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── Caching Mechanism ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Smart API Caching</h2>
+        <div class="sub">Fingerprint-based SQLite cache eliminates redundant API calls</div>
+        <div class="code-block">
+<span class="comment"># Each API request is normalized and hashed</span>
+request  = <span class="string">"100 Elgar Pl 19D, New York, NY 10475, USA"</span>
+normalize → {<span class="string">"address"</span>: <span class="string">"100 Elgar Pl 19D, New York, NY 10475, USA"</span>}
+fingerprint = md5(json.dumps(normalized))  <span class="comment"># → "a1b2c3d4..."</span>
+cache_key   = <span class="string">f"geocoding_{fingerprint}"</span>
+
+<span class="comment"># Lookup in api_cache table</span>
+<span class="keyword">if</span> cache_hit:
+    <span class="keyword">return</span> response_json  <span class="comment"># 0 API calls</span>
+<span class="keyword">else</span>:
+    result = call_google_api()
+    save_to_cache(result, ttl_days=<span class="string">180</span>)
+
+<span class="comment"># Result: 2nd pipeline run = 100% cache hits ✅</span>
+        </div>
+      </div>
+
+      <!-- ── Tech Stack ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Tech Stack</h2>
+        <div class="sub">Full breakdown of technologies used across the pipeline</div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="tech-table">
+            <tbody>
+              <tr>
+                <td>Languages</td>
+                <td>Python 3.x, SQL</td>
+              </tr>
+              <tr>
+                <td>ML / AI Frameworks</td>
+                <td>XGBoost, scikit-learn (LogisticRegression, train_test_split), SHAP (TreeExplainer)</td>
+              </tr>
+              <tr>
+                <td>Geospatial / Data</td>
+                <td>H3 (Uber Geohashing), Shapely, Geohash2, Folium, Pandas, NumPy</td>
+              </tr>
+              <tr>
+                <td>APIs &amp; External Services</td>
+                <td>Google Maps Geocoding API, Google Address Validation API, Google Maps Roads API, Google Places API</td>
+              </tr>
+              <tr>
+                <td>Databases / Storage</td>
+                <td>SQLite, SQLAlchemy ORM, Apache Parquet</td>
+              </tr>
+              <tr>
+                <td>DevOps / Tooling</td>
+                <td>Click CLI (9 commands), YAML config management (weights.yaml, poi_taxonomy.yaml, config.yaml), pytest + pytest-cov, black, pylint</td>
+              </tr>
+              <tr>
+                <td>Core Competencies</td>
+                <td>Geospatial Risk Modeling, Feature Engineering, Spatial Clustering, ML Explainability, Data Pipeline Architecture, API Rate Limiting &amp; Caching</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Back link ── -->
+      <div style="text-align:center;padding-top:2rem;">
+        <a href="projects.html" class="btn btn-outline">← Back to All Projects</a>
+      </div>
+
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/zxcjoy" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/ziyuchen025/" target="_blank">LinkedIn</a>
+      <a href="mailto:zychen025@gmail.com">Email</a>
+    </div>
+    <p>Built with 🐾 by Claw · © 2026 Chase (Ziyu) Chen</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOC Intelligence Platform — Chase (Ziyu) Chen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--text-secondary); font-size: 0.9rem;
+      margin-bottom: 2.5rem; transition: var(--transition);
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .project-hero-icon {
+      width: 72px; height: 72px; border-radius: 16px;
+      background: linear-gradient(135deg,#f7971e,#ffd200);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; margin-bottom: 1.5rem;
+      box-shadow: 0 0 40px rgba(247,151,30,0.25);
+    }
+    .project-hero-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800;
+      letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.2;
+    }
+    .project-hero-desc {
+      color: var(--text-secondary); font-size: 1.05rem;
+      max-width: 760px; line-height: 1.8; margin-bottom: 2rem;
+    }
+
+    /* Metrics */
+    .metric-card { text-align: center; }
+    .metric-val {
+      font-size: 2.4rem; font-weight: 800;
+      background: linear-gradient(135deg,#f7971e,#ffd200);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.2;
+    }
+    .metric-label {
+      color: var(--text-muted); font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem;
+    }
+
+    /* Pipeline phases */
+    .pipeline-phase {
+      background: rgba(247,151,30,0.04);
+      border: 1px solid rgba(247,151,30,0.15);
+      border-radius: var(--radius); padding: 1.5rem 1.5rem 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .phase-label {
+      font-family: var(--font-mono); font-size: 0.78rem;
+      color: #f7971e; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 1.2rem;
+    }
+    .pipeline-step {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1rem 1.2rem; border-radius: var(--radius-sm);
+      background: var(--bg-card); border: 1px solid var(--border);
+      margin-bottom: 0.8rem; transition: var(--transition);
+    }
+    .pipeline-step:hover { border-color: rgba(247,151,30,0.25); }
+    .step-num {
+      font-family: var(--font-mono); color: #f7971e;
+      font-size: 0.78rem; font-weight: 700; min-width: 60px; padding-top: 0.1rem;
+    }
+    .step-body h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .step-body p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+    .step-body .step-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .step-body .step-tag {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--text-muted); background: var(--bg-secondary);
+      padding: 0.15rem 0.6rem; border-radius: 50px; border: 1px solid var(--border);
+    }
+
+    /* Detail section */
+    .detail-section { margin-bottom: 4rem; }
+    .detail-section h2 {
+      font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;
+      padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+    }
+    .detail-section .sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    /* Highlight box */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(247,151,30,0.04), rgba(255,210,0,0.04));
+      border: 1px solid rgba(247,151,30,0.15);
+      border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 2rem;
+    }
+    .highlight-box ul { list-style: none; }
+    .highlight-box ul li {
+      position: relative; padding-left: 1.4rem;
+      margin-bottom: 0.65rem; color: var(--text-secondary); font-size: 0.95rem;
+    }
+    .highlight-box ul li::before { content: '▸'; position: absolute; left: 0; color: #f7971e; }
+    .highlight-box ul li strong { color: var(--text-primary); }
+
+    /* Tech table */
+    .tech-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .tech-table td {
+      padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); vertical-align: top;
+    }
+    .tech-table td:first-child {
+      color: #f7971e; font-family: var(--font-mono);
+      font-size: 0.78rem; white-space: nowrap; min-width: 190px; font-weight: 600;
+    }
+    .tech-table tr:last-child td { border-bottom: none; }
+    .tech-table tr:hover td { background: rgba(247,151,30,0.02); }
+
+    /* ── FedEx Sample Report ── */
+    .report-frame {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    .report-frame-header {
+      background: linear-gradient(135deg, rgba(247,151,30,0.12), rgba(255,210,0,0.08));
+      border-bottom: 1px solid rgba(247,151,30,0.2);
+      padding: 1rem 1.5rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .report-frame-header .dot-row { display: flex; gap: 6px; }
+    .report-frame-header .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .report-frame-header .dot-r { background: #ff6b6b; }
+    .report-frame-header .dot-y { background: #ffd200; }
+    .report-frame-header .dot-g { background: #00ff88; }
+    .report-frame-header .report-title {
+      font-family: var(--font-mono); font-size: 0.8rem;
+      color: var(--text-muted); letter-spacing: 1px;
+    }
+    .report-body { padding: 2rem; background: var(--bg-secondary); }
+
+    /* Executive summary card */
+    .exec-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.5rem;
+      margin-bottom: 1.5rem; display: flex; gap: 1.5rem; align-items: flex-start;
+    }
+    .grade-badge {
+      width: 60px; height: 60px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; font-weight: 800; flex-shrink: 0; color: #fff;
+      background: #ed8936;
+    }
+    .exec-headline { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .exec-body { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; }
+    .exec-warn {
+      background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2);
+      border-radius: 8px; padding: 0.75rem 1rem; margin-top: 0.75rem; font-size: 0.85rem;
+    }
+    .exec-warn strong { color: var(--accent3); }
+
+    /* Stats row inside report */
+    .report-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .report-stat {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1rem; text-align: center;
+    }
+    .report-stat .rnum { font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+    .report-stat .rlbl { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.25rem; }
+
+    /* Industry landscape */
+    .landscape-summary {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.2rem 1.5rem; margin-bottom: 1rem;
+    }
+    .landscape-headline { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .landscape-body { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.7; }
+
+    /* Sentiment table */
+    .sent-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 1.5rem; }
+    .sent-table th {
+      background: rgba(255,255,255,0.04); padding: 0.6rem 0.8rem;
+      text-align: left; font-size: 0.72rem; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border);
+    }
+    .sent-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-secondary); }
+    .sent-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .sent-table .positive { color: #00ff88; font-weight: 600; }
+    .sent-table .negative { color: var(--accent3); }
+    .sent-table .highlight-row td { background: rgba(0,212,255,0.06); color: var(--text-primary); font-weight: 600; }
+    .sent-table .company-name { color: var(--text-primary); font-weight: 500; }
+
+    /* Sentiment bar */
+    .sent-bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .sent-bar-bg { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+    .sent-bar-fill { height: 100%; border-radius: 4px; }
+    .bar-pos { background: linear-gradient(90deg,#00b894,#00ff88); }
+    .bar-neg { background: linear-gradient(90deg,#ff6b6b,#e53e3e); }
+    .bar-neutral { background: linear-gradient(90deg,#718096,#a0aec0); }
+
+    /* Value map */
+    .value-map { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .value-col {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1rem;
+    }
+    .value-col h4 { font-size: 0.78rem; font-weight: 700; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .value-col ul { list-style: none; }
+    .value-col ul li { font-size: 0.8rem; color: var(--text-secondary); padding: 0.2rem 0; }
+    .value-col ul li::before { content: '· '; color: var(--text-muted); }
+    .col-green h4 { color: #00ff88; }
+    .col-blue h4 { color: var(--accent); }
+    .col-gray h4 { color: var(--text-muted); }
+
+    /* Issue cards */
+    .issue-card-dark {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-left: 4px solid var(--accent3);
+      border-radius: var(--radius-sm); padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .issue-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+    .issue-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+    .issue-title-text { font-size: 1rem; font-weight: 700; }
+    .issue-badge { background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.3); color: var(--accent3); font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.7rem; border-radius: 50px; white-space: nowrap; }
+
+    .metrics-row { display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .m-cell { text-align: center; }
+    .m-val { font-size: 1.5rem; font-weight: 800; }
+    .m-lbl { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .m-concern { color: var(--accent3); }
+    .m-industry { color: var(--text-secondary); }
+    .m-delta { color: #ff6b6b; }
+    .m-cases { color: var(--text-primary); }
+
+    .insight-block {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 0.8rem;
+    }
+    .insight-block h4 { font-size: 0.8rem; color: #ffd200; margin-bottom: 0.5rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; }
+    .insight-block p { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.7; }
+    .insight-block strong { color: var(--text-primary); }
+    .insight-block ul { list-style: none; margin-top: 0.5rem; }
+    .insight-block ul li { font-size: 0.82rem; color: var(--text-secondary); padding: 0.2rem 0 0.2rem 1rem; position: relative; }
+    .insight-block ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent3); font-size: 0.8rem; }
+
+    .rec-grid { display: grid; grid-template-columns: auto 1fr auto; gap: 0.4rem 0.8rem; align-items: start; margin-top: 0.5rem; }
+    .rec-priority { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; padding-top: 0.1rem; }
+    .p0 { color: var(--accent3); }
+    .p1 { color: #ffd200; }
+    .rec-text { font-size: 0.82rem; color: var(--text-secondary); }
+    .rec-timeline { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; padding-top: 0.1rem; }
+
+    .competitor-callout {
+      background: rgba(0,212,255,0.04); border: 1px solid rgba(0,212,255,0.12);
+      border-radius: 8px; padding: 0.8rem 1rem; margin-top: 0.8rem; font-size: 0.83rem;
+    }
+    .competitor-callout strong { color: var(--accent); }
+    .competitor-callout p { color: var(--text-secondary); line-height: 1.6; }
+
+    .quotes-section { margin-top: 0.8rem; }
+    .quotes-toggle { font-size: 0.8rem; color: var(--accent); cursor: pointer; background: none; border: none; padding: 0; font-family: var(--font); }
+    .quote-item-dark {
+      background: rgba(255,255,255,0.02); border-left: 2px solid rgba(0,212,255,0.2);
+      border-radius: 4px; padding: 0.75rem 1rem; margin-top: 0.5rem;
+    }
+    .quote-meta-dark { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+    .platform-chip { display: inline-block; background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2); color: var(--accent); padding: 0.1rem 0.5rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.68rem; margin-right: 4px; }
+    .quote-body-dark { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.6; font-style: italic; }
+
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+    .report-section-label {
+      font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .report-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    @media (max-width: 768px) {
+      .report-stats { grid-template-columns: repeat(2, 1fr); }
+      .value-map { grid-template-columns: 1fr; }
+      .exec-card { flex-direction: column; }
+      .metrics-row { gap: 1rem; }
+      .pipeline-step { flex-direction: column; }
+      .step-num { min-width: unset; }
+      .sent-table { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+  <div class="glow-orb"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo"><span>&lt;ZC /&gt;</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="experience.html">Experience</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="skills.html">Skills</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="main-content">
+    <section class="section">
+
+      <a href="projects.html" class="back-link">← Back to Projects</a>
+
+      <!-- ── Hero ── -->
+      <div class="project-hero-icon">🗣️</div>
+      <div class="section-label">// Feb 2026 · Internal Tool — US Logistics Industry</div>
+      <h1 class="project-hero-title">VOC Intelligence &amp; Competitive Analysis Platform</h1>
+      <p class="project-hero-desc">
+        An end-to-end Voice-of-Customer intelligence system that transforms unstructured customer reviews into actionable competitive intelligence. The platform scrapes 100K+ posts across 14 platforms, classifies them with LLMs across a 110-category issue taxonomy, and generates Claude Sonnet-powered per-company competitive analysis reports — complete with AI root-cause narratives, prioritized recommendations, and review authenticity assessments.
+      </p>
+      <div class="tags" style="margin-bottom:3.5rem;">
+        <span class="tag tag-accent">Python</span>
+        <span class="tag tag-accent">LLMs</span>
+        <span class="tag tag-accent">Anthropic SDK</span>
+        <span class="tag tag-accent">Claude Sonnet</span>
+        <span class="tag">NLP · Sentiment Analysis</span>
+        <span class="tag">Web Scraping · Playwright</span>
+        <span class="tag">SQLite · WAL Mode</span>
+        <span class="tag">SimHash Dedup</span>
+        <span class="tag">Text Classification</span>
+        <span class="tag">Concurrent Requests</span>
+        <span class="tag">HTML / XLSX Export</span>
+        <span class="tag">Response Caching</span>
+      </div>
+
+      <!-- ── Key Metrics ── -->
+      <div class="grid-4" style="margin-bottom:4rem;">
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">100K+</div>
+          <div class="metric-label">Posts Collected</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">14</div>
+          <div class="metric-label">Scraping Platforms</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">35+</div>
+          <div class="metric-label">Companies Tracked</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">110</div>
+          <div class="metric-label">Issue Leaf Categories</div>
+        </div>
+      </div>
+
+      <!-- ── Architecture ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>System Architecture</h2>
+        <div class="sub">Fully decoupled, phase-based pipeline — Scrape → Analyze → Report</div>
+
+        <div class="pipeline-phase">
+          <div class="phase-label">⬡ Phase 1 — Scrape</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">SCRAPER</div>
+            <div class="step-body">
+              <h4>Multi-Platform Web Scraping (14 Sources)</h4>
+              <p>Collects posts and comments from Reddit, Trustpilot, BBB, YouTube, TikTok, and 7 Chinese-language platforms via Playwright-driven browser automation. Checkpoint-based resumability ensures zero data loss on interruption or machine restart — pipelines can be stopped mid-run and resumed from exactly where they left off.</p>
+              <div class="step-tags"><span class="step-tag">Playwright</span><span class="step-tag">14 Platforms</span><span class="step-tag">Checkpoint Resumability</span><span class="step-tag">35+ Companies</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">DEDUP</div>
+            <div class="step-body">
+              <h4>SimHash Near-Duplicate Detection &amp; Language ID</h4>
+              <p>Before LLM inference, applies SimHash-based near-duplicate detection to filter semantically identical posts across platforms, and language identification (EN/ZH) to route content appropriately. Reduces noise and LLM token spend on irrelevant or repeated content.</p>
+              <div class="step-tags"><span class="step-tag">SimHash</span><span class="step-tag">Language ID (EN/ZH)</span><span class="step-tag">Preprocessing</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-phase">
+          <div class="phase-label">⬡ Phase 2 — Analyze</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">LLM</div>
+            <div class="step-body">
+              <h4>3-Stage LLM Classification Pipeline</h4>
+              <p>Uses MiniMax-M2.5 (accessed via Anthropic SDK) in a 3-stage pipeline: (1) sentiment scoring per post, (2) primary issue category detection, (3) multi-label leaf-category classification across 110 categories in the issue taxonomy. Batches 5 posts per prompt call — achieving a 5× API cost reduction critical for subscription-based token pricing.</p>
+              <div class="step-tags"><span class="step-tag">MiniMax-M2.5</span><span class="step-tag">Anthropic SDK</span><span class="step-tag">3-Stage Pipeline</span><span class="step-tag">5-Post Batching</span><span class="step-tag">110-Category Taxonomy</span></div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">STORAGE</div>
+            <div class="step-body">
+              <h4>Concurrent SQLite with WAL Mode</h4>
+              <p>All classified posts are stored in SQLite with WAL (Write-Ahead Logging) mode enabled for concurrent write access across 8 threads. Parameterized, case-insensitive company resolution supports any of 35+ tracked companies via a single CLI flag.</p>
+              <div class="step-tags"><span class="step-tag">SQLite WAL</span><span class="step-tag">8 Threads</span><span class="step-tag">Concurrent Writes</span><span class="step-tag">Click CLI</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-phase">
+          <div class="phase-label">⬡ Phase 3 — Report</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">REPORT</div>
+            <div class="step-body">
+              <h4>Claude Sonnet-Powered Competitive Analysis</h4>
+              <p>Generates per-company HTML and XLSX competitive analysis reports via Claude Sonnet. Each report includes: AI root-cause narratives for top issues, prioritized P0/P1/P2 recommendations with effort and timeline estimates, review authenticity assessments for top-rated competitors, and a company vs. industry sentiment comparison. Response caching eliminates redundant API calls on re-runs.</p>
+              <div class="step-tags"><span class="step-tag">Claude Sonnet</span><span class="step-tag">HTML / XLSX Export</span><span class="step-tag">Root-Cause Analysis</span><span class="step-tag">Authenticity Assessment</span><span class="step-tag">Response Caching</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Key Achievements ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Key Achievements</h2>
+        <div class="sub">Quantified technical outcomes</div>
+        <div class="highlight-box">
+          <ul>
+            <li><strong>100K+ posts collected</strong> across 14 platforms (Reddit, Trustpilot, BBB, YouTube, TikTok + 7 Chinese platforms), covering 35+ US logistics companies with zero data loss via checkpoint-based resumability.</li>
+            <li><strong>5× API cost reduction</strong> through 5-post-per-prompt batching in the LLM classification pipeline — critical for subscription-based token pricing at scale.</li>
+            <li><strong>SimHash dedup + language ID</strong> as preprocessing steps reduced noise in downstream LLM inference by filtering near-duplicate and irrelevant content before classification.</li>
+            <li><strong>110-category issue taxonomy</strong> enabling multi-label classification of delivery complaints, tracking failures, customer service breakdowns, and package security issues across the full industry.</li>
+            <li><strong>Claude Sonnet reporting layer</strong> generates per-company vs. industry HTML/XLSX reports with AI root-cause narratives and review authenticity assessments, with response caching to eliminate redundant API calls.</li>
+            <li><strong>Fully decoupled 3-phase architecture</strong> (Scrape → Analyze → Report) with 8-thread concurrent execution and SQLite WAL-mode write concurrency — enabling any of 35+ companies to be analyzed via a single CLI flag.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── Tech Stack ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Tech Stack</h2>
+        <div class="sub">Full breakdown of technologies across all three pipeline phases</div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="tech-table">
+            <tbody>
+              <tr>
+                <td>Language</td>
+                <td>Python 3.x</td>
+              </tr>
+              <tr>
+                <td>LLMs / AI</td>
+                <td>MiniMax-M2.5 (classification), Claude Sonnet (reporting) — both via Anthropic SDK</td>
+              </tr>
+              <tr>
+                <td>NLP Techniques</td>
+                <td>Sentiment analysis, multi-label text classification, SimHash near-duplicate detection, language identification (EN/ZH)</td>
+              </tr>
+              <tr>
+                <td>Web Scraping</td>
+                <td>Playwright (browser automation), 14 source platforms including Reddit, Trustpilot, BBB, YouTube, TikTok, and 7 Chinese platforms</td>
+              </tr>
+              <tr>
+                <td>Database / Storage</td>
+                <td>SQLite (WAL mode for write concurrency), HTML and XLSX report export</td>
+              </tr>
+              <tr>
+                <td>Concurrency</td>
+                <td>8-thread concurrent request execution, checkpoint-based pipeline resumability</td>
+              </tr>
+              <tr>
+                <td>CLI / Config</td>
+                <td>Click CLI with parameterized company resolution (any of 35+ companies via flag), response caching for LLM re-runs</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── FedEx Sample Report ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Sample Output</h2>
+        <div class="sub">Illustrative analysis — FedEx vs. US Logistics Industry · Generated 2026-03-16</div>
+
+        <div class="report-frame">
+          <div class="report-frame-header">
+            <div class="dot-row">
+              <div class="dot dot-r"></div>
+              <div class="dot dot-y"></div>
+              <div class="dot dot-g"></div>
+            </div>
+            <div class="report-title">VOC Report — FedEx vs. Industry &nbsp;|&nbsp; Period: 2025-01-01 → 2026-03-16</div>
+          </div>
+
+          <div class="report-body">
+
+            <!-- Executive Summary -->
+            <div class="report-section-label">Executive Summary</div>
+
+            <div class="report-stats">
+              <div class="report-stat"><div class="rnum">53,746</div><div class="rlbl">Total Posts</div></div>
+              <div class="report-stat"><div class="rnum">6,051</div><div class="rlbl">FedEx Posts</div></div>
+              <div class="report-stat"><div class="rnum">4</div><div class="rlbl">Platforms</div></div>
+              <div class="report-stat"><div class="rnum">27</div><div class="rlbl">Companies</div></div>
+            </div>
+
+            <div class="exec-card">
+              <div class="grade-badge">C-</div>
+              <div>
+                <div class="exec-headline">FedEx underperforms industry benchmarks — delivery accuracy and timeliness issues offset tracking reliability strengths</div>
+                <div class="exec-body">
+                  FedEx's customer sentiment trails the industry average by 9.3 percentage points (−0.512 vs −0.418), driven primarily by delivery execution failures. While the company excels in tracking system reliability with 31% fewer complaints about stuck updates, critical weaknesses in delivery accuracy and timeliness are damaging customer trust. Wrong address deliveries occur 62% more frequently than industry peers, and extreme delays (3+ days) happen at double the industry rate. With 11.3% of total industry conversation volume, FedEx's reputation challenges are highly visible across major review platforms.
+                </div>
+                <div class="exec-warn">
+                  <strong>#1 Priority:</strong> Implement last-mile delivery accuracy controls to reduce wrong address deliveries — the largest single performance gap versus competitors.
+                </div>
+              </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- Industry Landscape -->
+            <div class="report-section-label">Industry Landscape</div>
+
+            <div class="landscape-summary">
+              <div class="landscape-headline">US delivery market faces widespread customer dissatisfaction — −0.418 industry sentiment driven by persistent delivery reliability and tracking failures</div>
+              <div class="landscape-body">Analysis of 53,746 customer posts across 27 delivery companies reveals negative sentiment dominating 85% of tracked providers. Traditional logistics giants including FedEx (−0.512), UPS (−0.475), and USPS (−0.382) are underperforming customer expectations, while specialized players like Pitney (0.657) and Veho (0.434) demonstrate that superior customer experience is achievable. The industry exhibits a stark performance divide with only 4 of 27 companies achieving positive sentiment — indicating systemic operational challenges across the delivery ecosystem.</div>
+            </div>
+
+            <div class="landscape-summary" style="padding: 1rem 1.5rem;">
+              <div class="landscape-headline" style="font-size:0.85rem;margin-bottom:0.75rem;">Company Sentiment Rankings</div>
+              <table class="sent-table">
+                <thead>
+                  <tr>
+                    <th>#</th><th>Company</th><th>Avg Sentiment</th><th>Posts</th><th>Bar (−1 to +1)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td class="company-name">Pitney</td><td class="positive">+0.657</td><td>159</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-pos" style="width:82%"></div></div></div></td></tr>
+                  <tr><td>2</td><td class="company-name">Veho</td><td class="positive">+0.434</td><td>204</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-pos" style="width:72%"></div></div></div></td></tr>
+                  <tr><td>3</td><td class="company-name">ShipBob</td><td class="positive">+0.085</td><td>43</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-pos" style="width:54%"></div></div></div></td></tr>
+                  <tr><td>4</td><td class="company-name">PIGGY</td><td class="positive">+0.067</td><td>6</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-pos" style="width:53%"></div></div></div></td></tr>
+                  <tr><td>5</td><td class="company-name">SFExpress</td><td class="negative">−0.191</td><td>17</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:40%"></div></div></div></td></tr>
+                  <tr><td>6</td><td class="company-name">4PX</td><td class="negative">−0.244</td><td>73</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:38%"></div></div></div></td></tr>
+                  <tr><td>7</td><td class="company-name">Cainiao</td><td class="negative">−0.283</td><td>67</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:36%"></div></div></div></td></tr>
+                  <tr><td>8</td><td class="company-name">DHL</td><td class="negative">−0.310</td><td>1,773</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:35%"></div></div></div></td></tr>
+                  <tr><td>9</td><td class="company-name">Temu</td><td class="negative">−0.342</td><td>191</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:33%"></div></div></div></td></tr>
+                  <tr><td>10</td><td class="company-name">YunExpress</td><td class="negative">−0.366</td><td>62</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:32%"></div></div></div></td></tr>
+                  <tr><td>11</td><td class="company-name">AmazonLogistics</td><td class="negative">−0.379</td><td>552</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:31%"></div></div></div></td></tr>
+                  <tr><td>12</td><td class="company-name">USPS</td><td class="negative">−0.382</td><td>2,981</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:31%"></div></div></div></td></tr>
+                  <tr><td>13</td><td class="company-name">Dropoff</td><td class="negative">−0.386</td><td>59</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:31%"></div></div></div></td></tr>
+                  <tr><td>14</td><td class="company-name">Shein</td><td class="negative">−0.424</td><td>185</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:29%"></div></div></div></td></tr>
+                  <tr><td>15</td><td class="company-name">LSO</td><td class="negative">−0.430</td><td>32</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:29%"></div></div></div></td></tr>
+                  <tr><td>16</td><td class="company-name">Yanwen</td><td class="negative">−0.473</td><td>41</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:26%"></div></div></div></td></tr>
+                  <tr><td>17</td><td class="company-name">UPS</td><td class="negative">−0.475</td><td>3,494</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:26%"></div></div></div></td></tr>
+                  <tr><td>18</td><td class="company-name">GLS</td><td class="negative">−0.477</td><td>66</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:26%"></div></div></div></td></tr>
+                  <tr class="highlight-row"><td>19</td><td>FedEx ★</td><td style="color:var(--accent3);">−0.512</td><td>3,565</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:24%"></div></div></div></td></tr>
+                  <tr><td>20</td><td class="company-name">Roadie</td><td class="negative">−0.528</td><td>78</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:24%"></div></div></div></td></tr>
+                  <tr><td>21</td><td class="company-name">SpeedX</td><td class="negative">−0.610</td><td>59</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:20%"></div></div></div></td></tr>
+                  <tr><td>22</td><td class="company-name">Sendle</td><td class="negative">−0.617</td><td>29</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:19%"></div></div></div></td></tr>
+                  <tr><td>23</td><td class="company-name">TForce</td><td class="negative">−0.696</td><td>12</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:15%"></div></div></div></td></tr>
+                  <tr><td>24</td><td class="company-name">UniUni</td><td class="negative">−0.720</td><td>354</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:14%"></div></div></div></td></tr>
+                  <tr><td>25</td><td class="company-name">OnTrac</td><td class="negative">−0.792</td><td>693</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:10%"></div></div></div></td></tr>
+                  <tr><td>26</td><td class="company-name">LaserShip</td><td class="negative">−0.792</td><td>19</td><td><div class="sent-bar-wrap"><div class="sent-bar-bg"><div class="sent-bar-fill bar-neg" style="width:10%"></div></div></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="value-map" style="margin-top:1rem;">
+              <div class="value-col col-green">
+                <h4>Most Valued by Customers</h4>
+                <ul>
+                  <li>Proactive communication with accurate time windows</li>
+                  <li>Personalized service relationships</li>
+                  <li>Rapid customer service response</li>
+                </ul>
+              </div>
+              <div class="value-col col-blue">
+                <h4>Emerging Differentiators</h4>
+                <ul>
+                  <li>Predictive delivery notifications</li>
+                  <li>Named employee relationships</li>
+                  <li>Transparent issue resolution</li>
+                </ul>
+              </div>
+              <div class="value-col col-gray">
+                <h4>Table Stakes</h4>
+                <ul>
+                  <li>Fast delivery</li>
+                  <li>Package condition protection</li>
+                  <li>Basic tracking capabilities</li>
+                </ul>
+              </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- Issue Deep Dives -->
+            <div class="report-section-label">Issue Deep Dives — FedEx vs. Industry</div>
+
+            <!-- Issue 1 -->
+            <div class="issue-card-dark">
+              <div class="issue-header-row">
+                <div>
+                  <div class="issue-label">Issue 1 · DELIVERY.LOCATION.WRONG_ADDRESS</div>
+                  <div class="issue-title-text">Delivered to Wrong Address</div>
+                </div>
+                <span class="issue-badge">CONCERN +3%</span>
+              </div>
+
+              <div class="metrics-row">
+                <div class="m-cell"><div class="m-val m-concern">8.1%</div><div class="m-lbl">FedEx</div></div>
+                <div class="m-cell"><div class="m-val m-industry">5.0%</div><div class="m-lbl">Industry</div></div>
+                <div class="m-cell"><div class="m-val m-delta">+3.2%</div><div class="m-lbl">Delta</div></div>
+                <div class="m-cell"><div class="m-val m-cases">290</div><div class="m-lbl">FedEx Cases</div></div>
+              </div>
+
+              <div class="insight-block">
+                <h4>Root Cause Analysis</h4>
+                <p><strong>Inadequate driver training and verification protocols for address confirmation at point of delivery.</strong></p>
+                <p style="margin-top:0.4rem;">FedEx drivers appear to be under time pressure to complete high-volume routes, leading to insufficient address verification before delivery. The company likely lacks robust technological tools or protocols that force drivers to confirm correct addresses through photo evidence or GPS verification before marking packages as delivered.</p>
+                <ul>
+                  <li>High delivery volume pressure leading to rushed deliveries</li>
+                  <li>Insufficient use of address verification technology</li>
+                  <li>Lack of standardized photo documentation requirements</li>
+                </ul>
+              </div>
+
+              <div class="insight-block">
+                <h4>Recommendations</h4>
+                <div class="rec-grid">
+                  <span class="rec-priority p0">P0</span>
+                  <span class="rec-text">Implement mandatory photo documentation showing package placement AND visible address numbers for all residential deliveries</span>
+                  <span class="rec-timeline">Immediate</span>
+                  <span class="rec-priority p0">P0</span>
+                  <span class="rec-text">Deploy GPS-based address verification requiring driver confirmation when delivery location doesn't match package address coordinates</span>
+                  <span class="rec-timeline">1–3 months</span>
+                  <span class="rec-priority p1">P1</span>
+                  <span class="rec-text">Revise driver performance metrics to prioritize delivery accuracy over speed, with penalties for confirmed wrong-address deliveries</span>
+                  <span class="rec-timeline">Immediate</span>
+                </div>
+              </div>
+
+              <div class="competitor-callout">
+                <p><strong>Competitor Insight — UPS:</strong> UPS maintains significantly better address accuracy at 1.1% vs FedEx's 8.1%, likely through better driver training and delivery verification systems. FedEx performs 7× worse than UPS — indicating systemic operational deficiencies rather than an industry-wide challenge.</p>
+              </div>
+
+              <div class="quotes-section">
+                <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:1px;">Customer Verbatim</div>
+                <div class="quote-item-dark">
+                  <div class="quote-meta-dark"><span class="platform-chip">BBB</span> 2026-02-05 · Teresa E · ★1.0</div>
+                  <div class="quote-body-dark">"How is Fedex still in business? They are awful! Never delivers on time if at all, and when they do they deliver to the wrong address even though it's in huge bold numbers on the outside of the home and mailbox."</div>
+                </div>
+                <div class="quote-item-dark">
+                  <div class="quote-meta-dark"><span class="platform-chip">BBB</span> 2025-12-10 · Rhonda T · ★1.0</div>
+                  <div class="quote-body-dark">"Fed Ex is doing a bad job delivering my packages, they deliver to someone else's home and takes picture. I'm not receiving my packages, someone gets my packages."</div>
+                </div>
+                <div class="quote-item-dark">
+                  <div class="quote-meta-dark"><span class="platform-chip">Reddit</span> 2025-12-07 · Tesilicious77</div>
+                  <div class="quote-body-dark">"FedEx left my package inside the truck sent to deliver packages to Amazon."</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Issue 2 -->
+            <div class="issue-card-dark">
+              <div class="issue-header-row">
+                <div>
+                  <div class="issue-label">Issue 2 · DELIVERY.TIMING.VERY_LATE</div>
+                  <div class="issue-title-text">Extremely Late (3+ days beyond promise)</div>
+                </div>
+                <span class="issue-badge">CONCERN +3%</span>
+              </div>
+
+              <div class="metrics-row">
+                <div class="m-cell"><div class="m-val m-concern">6.1%</div><div class="m-lbl">FedEx</div></div>
+                <div class="m-cell"><div class="m-val m-industry">3.0%</div><div class="m-lbl">Industry</div></div>
+                <div class="m-cell"><div class="m-val m-delta">+3.2%</div><div class="m-lbl">Delta</div></div>
+                <div class="m-cell"><div class="m-val m-cases">219</div><div class="m-lbl">FedEx Cases</div></div>
+              </div>
+
+              <div class="insight-block">
+                <h4>Root Cause Analysis</h4>
+                <p><strong>Network capacity constraints and inefficient routing causing packages to miss connection windows at sorting facilities.</strong></p>
+                <p style="margin-top:0.4rem;">FedEx appears to be accepting more time-sensitive shipments than their network can reliably handle, particularly for expedited services. Repeated "tomorrow" promises and 72+ hour tracking gaps suggest systemic issues with package flow through sorting facilities and lack of real-time visibility into actual delivery capabilities.</p>
+                <ul>
+                  <li>Inadequate staffing at key distribution hubs during peak periods</li>
+                  <li>Poor visibility and communication systems leading to tracking gaps of 72+ hours</li>
+                  <li>Overselling of expedited services without corresponding capacity allocation</li>
+                </ul>
+              </div>
+
+              <div class="insight-block">
+                <h4>Recommendations</h4>
+                <div class="rec-grid">
+                  <span class="rec-priority p0">P0</span>
+                  <span class="rec-text">Implement emergency capacity audit and temporarily reduce acceptance of expedited services at constrained facilities</span>
+                  <span class="rec-timeline">Immediate</span>
+                  <span class="rec-priority p0">P0</span>
+                  <span class="rec-text">Deploy real-time tracking updates and proactive customer communication system to eliminate 24+ hour tracking gaps</span>
+                  <span class="rec-timeline">1–3 months</span>
+                  <span class="rec-priority p1">P1</span>
+                  <span class="rec-text">Increase staffing and processing capacity at identified bottleneck sorting facilities</span>
+                  <span class="rec-timeline">3–6 months</span>
+                </div>
+              </div>
+
+              <div class="competitor-callout">
+                <p><strong>Competitor Insight — UPS:</strong> UPS maintains better network capacity planning with more conservative service commitments, resulting in 12× better performance on extreme delays (0.5% vs 6.1%). FedEx is performing catastrophically worse than all major competitors, with rates 12–61× higher than next-worst performers.</p>
+              </div>
+
+              <div class="quotes-section">
+                <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:1px;">Customer Verbatim</div>
+                <div class="quote-item-dark">
+                  <div class="quote-meta-dark"><span class="platform-chip">BBB</span> 2026-02-03</div>
+                  <div class="quote-body-dark">"Placed an order on 1-21-26 and paid for 2 day shipping. It is now 2-3-26. Contacted local FedEx office and they cannot provide an explanation for the non-delivery or are willing to refund the shipping fee."</div>
+                </div>
+                <div class="quote-item-dark">
+                  <div class="quote-meta-dark"><span class="platform-chip">BBB</span> 2026-01-28 · Aaron D · ★1.0</div>
+                  <div class="quote-body-dark">"Currently awaiting a package for which I paid extra for expedited shipping. Package is now delayed by 4 days, and apparently the only humans that Fed Ex employs are the incompetent delivery drivers. Can't get a human on the phone."</div>
+                </div>
+                <div class="quote-item-dark">
+                  <div class="quote-meta-dark"><span class="platform-chip">BBB</span> 2026-01-28</div>
+                  <div class="quote-body-dark">"On 1/22/2026 I shipped time sensitive passport material using Priority Overnight (guaranteed delivery Jan 26 by 10:30 AM). The last public scan was Jan 25 at 3:03 PM and tracking did not update for over 72 hours."</div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /report-body -->
+        </div><!-- /report-frame -->
+      </div>
+
+      <!-- ── Back ── -->
+      <div style="text-align:center;padding-top:2rem;">
+        <a href="projects.html" class="btn btn-outline">← Back to All Projects</a>
+      </div>
+
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/zxcjoy" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://www.linkedin.com/in/ziyuchen025/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="mailto:zychen025@gmail.com">Email</a>
+    </div>
+    <p>Built with 🐾 by Claw · © 2026 Chase (Ziyu) Chen</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

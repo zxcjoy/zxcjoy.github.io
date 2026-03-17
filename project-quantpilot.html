@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantPilot Trading System — Chase (Ziyu) Chen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --accent-purple: #8b5cf6;
+      --accent-violet: #a78bfa;
+      --accent-purple-grad: linear-gradient(135deg, #7c3aed, #a78bfa);
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--text-secondary); font-size: 0.9rem;
+      margin-bottom: 2.5rem; transition: var(--transition);
+    }
+    .back-link:hover { color: var(--accent-purple); }
+
+    .project-hero-icon {
+      width: 72px; height: 72px; border-radius: 16px;
+      background: var(--accent-purple-grad);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; margin-bottom: 1.5rem;
+      box-shadow: 0 0 40px rgba(139,92,246,0.25);
+    }
+    .project-hero-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800;
+      letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.2;
+    }
+    .project-hero-desc {
+      color: var(--text-secondary); font-size: 1.05rem;
+      max-width: 760px; line-height: 1.8; margin-bottom: 1.5rem;
+    }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.3);
+      color: var(--accent-violet); font-family: var(--font-mono);
+      font-size: 0.75rem; padding: 0.35rem 0.85rem; border-radius: 50px;
+      letter-spacing: 1px; margin-bottom: 2rem;
+    }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent-purple);
+      animation: pulse-dot 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.45; transform: scale(0.8); }
+    }
+
+    /* Metrics */
+    .metric-card { text-align: center; }
+    .metric-val {
+      font-size: 2.4rem; font-weight: 800;
+      background: var(--accent-purple-grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.2;
+    }
+    .metric-label {
+      color: var(--text-muted); font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem;
+    }
+
+    /* Detail section */
+    .detail-section { margin-bottom: 4rem; }
+    .detail-section h2 {
+      font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;
+      padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+    }
+    .detail-section .sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    /* Architecture layers */
+    .arch-layer {
+      border-radius: var(--radius); padding: 1.5rem 1.5rem 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .arch-layer.layer-interface {
+      background: rgba(139,92,246,0.04); border: 1px solid rgba(139,92,246,0.15);
+    }
+    .arch-layer.layer-intelligence {
+      background: rgba(167,139,250,0.04); border: 1px solid rgba(167,139,250,0.12);
+    }
+    .arch-layer.layer-execution {
+      background: rgba(99,102,241,0.04); border: 1px solid rgba(99,102,241,0.12);
+    }
+    .layer-label {
+      font-family: var(--font-mono); font-size: 0.78rem;
+      color: var(--accent-purple); letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 1.2rem;
+    }
+    .pipeline-step {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1rem 1.2rem; border-radius: var(--radius-sm);
+      background: var(--bg-card); border: 1px solid var(--border);
+      margin-bottom: 0.8rem; transition: var(--transition);
+    }
+    .pipeline-step:hover { border-color: rgba(139,92,246,0.3); }
+    .step-num {
+      font-family: var(--font-mono); color: var(--accent-purple);
+      font-size: 0.78rem; font-weight: 700; min-width: 55px; padding-top: 0.1rem;
+    }
+    .step-body h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .step-body p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+    .step-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .step-tag {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--text-muted); background: var(--bg-secondary);
+      padding: 0.15rem 0.6rem; border-radius: 50px; border: 1px solid var(--border);
+    }
+
+    /* Feature cards grid */
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.5rem;
+      border-left: 3px solid var(--accent-purple); transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .feature-card:hover { border-color: rgba(139,92,246,0.35); transform: translateY(-2px); }
+    .feature-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+    .feature-num {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--accent-purple); letter-spacing: 1.5px;
+      text-transform: uppercase; margin-bottom: 0.4rem;
+    }
+    .feature-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-desc { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.65; }
+    .feature-badge {
+      display: inline-block; margin-top: 0.7rem;
+      background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.25);
+      color: var(--accent-violet); font-family: var(--font-mono); font-size: 0.72rem;
+      padding: 0.18rem 0.65rem; border-radius: 6px;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(139,92,246,0.04), rgba(167,139,250,0.04));
+      border: 1px solid rgba(139,92,246,0.15);
+      border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 2rem;
+    }
+    .highlight-box ul { list-style: none; }
+    .highlight-box ul li {
+      position: relative; padding-left: 1.4rem;
+      margin-bottom: 0.65rem; color: var(--text-secondary); font-size: 0.95rem;
+    }
+    .highlight-box ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent-purple); }
+    .highlight-box ul li strong { color: var(--text-primary); }
+
+    /* Rules cards */
+    .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .rule-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.1rem 1.3rem;
+      transition: var(--transition);
+    }
+    .rule-card:hover { border-color: rgba(139,92,246,0.25); }
+    .rule-name {
+      font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-purple);
+      font-weight: 700; margin-bottom: 0.35rem;
+    }
+    .rule-desc { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.6; }
+    .rule-default {
+      font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    /* Tech table */
+    .tech-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .tech-table td {
+      padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); vertical-align: top;
+    }
+    .tech-table td:first-child {
+      color: var(--accent-purple); font-family: var(--font-mono);
+      font-size: 0.78rem; white-space: nowrap; min-width: 190px; font-weight: 600;
+    }
+    .tech-table tr:last-child td { border-bottom: none; }
+    .tech-table tr:hover td { background: rgba(139,92,246,0.02); }
+
+    /* Roadmap */
+    .roadmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .roadmap-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.2rem 1.4rem;
+    }
+    .roadmap-phase {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem;
+    }
+    .roadmap-phase.done { color: #22c55e; }
+    .roadmap-phase.active { color: var(--accent-purple); }
+    .roadmap-phase.next { color: var(--text-muted); }
+    .roadmap-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .roadmap-items { list-style: none; }
+    .roadmap-items li {
+      font-size: 0.83rem; color: var(--text-secondary);
+      padding: 0.25rem 0; display: flex; gap: 0.5rem; align-items: flex-start;
+    }
+    .roadmap-items li.done-item { color: var(--text-muted); }
+    .roadmap-items li span { flex-shrink: 0; }
+
+    @media (max-width: 768px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .rules-grid { grid-template-columns: 1fr; }
+      .roadmap-grid { grid-template-columns: 1fr; }
+      .pipeline-step { flex-direction: column; }
+      .step-num { min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+  <div class="glow-orb"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo"><span>&lt;ZC /&gt;</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="experience.html">Experience</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="skills.html">Skills</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="main-content">
+    <section class="section">
+
+      <a href="projects.html" class="back-link">← Back to Projects</a>
+
+      <!-- ── Hero ── -->
+      <div class="project-hero-icon">🤖</div>
+      <div class="section-label">// Mar 2026 — Present · Personal Project — Quantitative Trading</div>
+      <h1 class="project-hero-title">QuantPilot — AI-Assisted Quantitative Trading System</h1>
+      <p class="project-hero-desc">
+        A full-stack quant trading platform designed for both humans and AI agents (OpenClaw). Features autonomous strategy execution, Claude-powered stock analysis across three analytical dimensions, a W-Bottom pattern scanner over curated stock universes, and a six-rule automated position monitoring engine — all accessible via CLI, REST API, and a Next.js web UI.
+      </p>
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        ACTIVE DEVELOPMENT
+      </div>
+
+      <!-- ── Metrics ── -->
+      <div class="grid-4" style="margin-bottom:4rem;">
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">36</div>
+          <div class="metric-label">REST API Endpoints</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">3</div>
+          <div class="metric-label">AI Research Skills</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">6</div>
+          <div class="metric-label">Auto-Sell Rules</div>
+        </div>
+        <div class="card metric-card animate-on-scroll">
+          <div class="metric-val">4</div>
+          <div class="metric-label">Builtin Strategies</div>
+        </div>
+      </div>
+
+      <!-- ── System Architecture ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>System Architecture</h2>
+        <p class="sub">Three-layer design — Interface → Intelligence → Execution — connected by an async event bus</p>
+
+        <div class="arch-layer layer-interface">
+          <div class="layer-label">// Layer 1 · Interface — Human &amp; AI Access Points</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">CLI</div>
+            <div class="step-body">
+              <h4>Click Command-Line Interface</h4>
+              <p>10 command groups covering portfolios, strategies, backtesting, monitoring, research, watchlists, and journal — with structured JSON output for programmatic consumption by AI agents.</p>
+              <div class="step-tags">
+                <span class="step-tag">Click 8.1</span>
+                <span class="step-tag">Rich</span>
+                <span class="step-tag">JSON output</span>
+                <span class="step-tag">10 commands</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">API</div>
+            <div class="step-body">
+              <h4>FastAPI REST + WebSocket</h4>
+              <p>36 business endpoints across 8 routers (portfolio, strategy, trade, monitor, research, data, journal, scanner) plus a <code>/manifest</code> endpoint publishing system capabilities for AI agent discovery, and a WebSocket channel for real-time alert streaming.</p>
+              <div class="step-tags">
+                <span class="step-tag">FastAPI 0.115</span>
+                <span class="step-tag">WebSocket</span>
+                <span class="step-tag">8 routers</span>
+                <span class="step-tag">AI manifest</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">WEB</div>
+            <div class="step-body">
+              <h4>Next.js 16 Web Dashboard</h4>
+              <p>8-page frontend built with shadcn/ui — dashboard, portfolios, strategies, monitor, research, backtest, and a Monaco editor for writing custom Python sell rules with real-time AST validation.</p>
+              <div class="step-tags">
+                <span class="step-tag">Next.js 16</span>
+                <span class="step-tag">shadcn/ui</span>
+                <span class="step-tag">Monaco Editor</span>
+                <span class="step-tag">Tailwind CSS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-layer layer-intelligence">
+          <div class="layer-label">// Layer 2 · Intelligence — AI &amp; Strategy Engine</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">SCAN</div>
+            <div class="step-body">
+              <h4>Scanner Service + Strategy Registry</h4>
+              <p>Auto-discovers strategy plugins at startup. ScannerService runs any scan-capable strategy over stock universes (S&amp;P 500, Nasdaq 100, Dow 30, Mag 7) with Parquet-cached OHLCV data and DB-first retrieval fallback to yfinance.</p>
+              <div class="step-tags">
+                <span class="step-tag">Strategy Registry</span>
+                <span class="step-tag">Plugin discovery</span>
+                <span class="step-tag">Parquet cache</span>
+                <span class="step-tag">S&amp;P 500 universe</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">AI</div>
+            <div class="step-body">
+              <h4>OpenClaw Research Orchestrator</h4>
+              <p>Three research skills (Technical, Fundamental, News Sentiment) run concurrently via <code>asyncio</code>, each feeding market data and computed indicators into a Claude prompt. Orchestrator exposes a <code>/manifest</code> for OpenClaw to discover and invoke skills autonomously.</p>
+              <div class="step-tags">
+                <span class="step-tag">Anthropic SDK</span>
+                <span class="step-tag">Claude Sonnet</span>
+                <span class="step-tag">Parallel skills</span>
+                <span class="step-tag">pandas-ta</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">MON</div>
+            <div class="step-body">
+              <h4>Position Monitor + Rule Sandbox</h4>
+              <p>Evaluates all bound rules against open positions on each tick. Custom rules are written in Python, AST-validated, and executed in a restricted sandbox — editable live in the Monaco UI without restarting the server.</p>
+              <div class="step-tags">
+                <span class="step-tag">AST validation</span>
+                <span class="step-tag">Hot-reload</span>
+                <span class="step-tag">Sandboxed exec</span>
+                <span class="step-tag">Rule registry</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-layer layer-execution">
+          <div class="layer-label">// Layer 3 · Execution — Brokerage &amp; Risk</div>
+
+          <div class="pipeline-step">
+            <div class="step-num">RISK</div>
+            <div class="step-body">
+              <h4>Pre-Trade Risk Manager</h4>
+              <p>Every signal passes through configurable risk checks before submission — position sizing limits, portfolio concentration cap, and daily loss limits — with full rejection logging to the audit trail.</p>
+              <div class="step-tags">
+                <span class="step-tag">Max position size</span>
+                <span class="step-tag">Daily loss cap</span>
+                <span class="step-tag">Concentration limits</span>
+                <span class="step-tag">Audit logging</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">EXEC</div>
+            <div class="step-body">
+              <h4>Alpaca Broker Adapter (Paper / Live)</h4>
+              <p>Unified broker interface supporting market, limit, stop, and stop-limit order types. Switches between paper and live Alpaca accounts via a single API call or config change — no code change required.</p>
+              <div class="step-tags">
+                <span class="step-tag">alpaca-py 0.28</span>
+                <span class="step-tag">Paper trading</span>
+                <span class="step-tag">Live trading</span>
+                <span class="step-tag">Simulated broker</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="step-num">DATA</div>
+            <div class="step-body">
+              <h4>Market Data + Backtest Engine</h4>
+              <p>Event-driven backtesting engine using SimulatedBroker. Performance analyzer computes Sharpe ratio, Sortino ratio, max drawdown, and win rate. Parquet cache with per-timeframe TTL avoids redundant API calls.</p>
+              <div class="step-tags">
+                <span class="step-tag">yfinance</span>
+                <span class="step-tag">Parquet TTL cache</span>
+                <span class="step-tag">Sharpe / Sortino</span>
+                <span class="step-tag">SQLAlchemy 2.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Core Features ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Core Features</h2>
+        <p class="sub">Six capabilities that define the system's trading and research workflow</p>
+
+        <div class="feature-grid">
+
+          <div class="feature-card">
+            <div class="feature-icon">📡</div>
+            <div class="feature-num">Feature 01</div>
+            <div class="feature-title">W-Bottom Pattern Scanner</div>
+            <div class="feature-desc">
+              Scans a configurable stock universe (up to S&amp;P 500) for W-shaped double-bottom reversals. Detects two local minima within a 60-bar lookback window, validates bottom symmetry within 5% tolerance, checks 10–40 bar separation, and confirms breakout above the neckline with an optional 1.2× volume spike filter. Emits a BUY signal with breakout percentage and pattern metadata.
+            </div>
+            <span class="feature-badge">lookback 60 bars · vol confirm 1.2×</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🧠</div>
+            <div class="feature-num">Feature 02</div>
+            <div class="feature-title">OpenClaw AI Stock Analysis</div>
+            <div class="feature-desc">
+              Three parallel research skills — Technical (SMA 20/50/200, RSI 14, Bollinger Bands, price patterns), Fundamental (P/E, margins, ROE/ROA, debt/equity, growth), and News Sentiment (headline classification) — each build a prompt from live market data and invoke Claude for a structured analysis with a confidence score. The orchestrator's <code>/manifest</code> endpoint allows OpenClaw to discover and chain skills autonomously.
+            </div>
+            <span class="feature-badge">3 skills · parallel async · confidence scored</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">⚙️</div>
+            <div class="feature-num">Feature 03</div>
+            <div class="feature-title">Automated Sell Rule Engine</div>
+            <div class="feature-desc">
+              Six builtin monitor rules evaluated against every open position on each tick. Rules bind to specific portfolios or symbols and fire sell signals automatically when triggered. Custom rules can be written in Python, validated via AST, and hot-reloaded — no restart needed. Composite AND/OR/NOT logic supported for complex multi-condition exits.
+            </div>
+            <span class="feature-badge">6 builtin rules · sandbox · hot-reload</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🔄</div>
+            <div class="feature-num">Feature 04</div>
+            <div class="feature-title">Dual Interface — Human &amp; AI</div>
+            <div class="feature-desc">
+              Every system function is accessible through three surfaces: a Click CLI with JSON output for scripting and AI parsing, a 36-route FastAPI backend for programmatic control, and a Next.js web UI for human interaction. The <code>/api/v1/manifest</code> endpoint publishes a machine-readable capability map so OpenClaw can introspect available commands and call them with minimal guidance.
+            </div>
+            <span class="feature-badge">CLI · REST API · Web UI · AI manifest</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <div class="feature-num">Feature 05</div>
+            <div class="feature-title">Strategy SDK + Backtesting</div>
+            <div class="feature-desc">
+              Four builtin strategies (W-Bottom, Momentum RSI, Mean Reversion Z-score, Trend-Following Donchian, Dual Momentum) plug into a common <code>BaseStrategy</code> ABC. The event-driven backtest engine replays bars through SimulatedBroker with the same risk checks as live mode. Performance analyzer surfaces Sharpe ratio, Sortino ratio, max drawdown, and win rate in a Rich-formatted CLI report.
+            </div>
+            <span class="feature-badge">4 strategies · same risk path as live</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🛡️</div>
+            <div class="feature-num">Feature 06</div>
+            <div class="feature-title">Risk Management &amp; Audit Trail</div>
+            <div class="feature-desc">
+              Pre-trade validation enforces position size limits, portfolio concentration caps, and daily loss thresholds before any order reaches the broker. Every signal, order submission, fill, rejection, and rule trigger is written to an append-only audit log, enabling post-trade attribution and compliance review.
+            </div>
+            <span class="feature-badge">pre-trade checks · append-only audit log</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Automated Sell Rules ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Automated Position Monitoring Rules</h2>
+        <p class="sub">Six builtin rules that fire sell signals or alerts automatically on each position tick</p>
+
+        <div class="rules-grid">
+          <div class="rule-card">
+            <div class="rule-name">trailing_stop</div>
+            <div class="rule-desc">Sells when price drops below a percentage from the highest observed price since entry. Tracks a rolling high-watermark.</div>
+            <div class="rule-default">Default: 5% trail · severity: critical</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-name">take_profit</div>
+            <div class="rule-desc">Sells when unrealized gain from average cost reaches the configured target percentage.</div>
+            <div class="rule-default">Default: 20% gain target · severity: warning</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-name">max_holding_days</div>
+            <div class="rule-desc">Forces an exit after a position has been held for more than N calendar days, preventing indefinite tie-up.</div>
+            <div class="rule-default">Default: 90 days · severity: warning</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-name">volume_anomaly</div>
+            <div class="rule-desc">Alerts when intraday volume exceeds a configurable multiple of the 20-day average — signals unusual institutional activity.</div>
+            <div class="rule-default">Default: 2.5× 20-day avg · alert only</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-name">rsi_divergence</div>
+            <div class="rule-desc">Alerts when price and RSI-14 are diverging — price making new highs while RSI declines, or vice versa.</div>
+            <div class="rule-default">RSI period: 14 · alert only</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-name">earnings_proximity</div>
+            <div class="rule-desc">Alerts when a scheduled earnings date is within the warning window, prompting a position review before event risk.</div>
+            <div class="rule-default">Default: 7-day warning · alert only</div>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <ul>
+            <li><strong>Custom rules</strong> can be written in Python using the <code>BaseMonitorRule</code> ABC and deployed live via the Monaco editor in the web UI — no server restart required.</li>
+            <li><strong>Composite logic</strong> supports AND/OR/NOT combinations of any rules for multi-condition exit strategies.</li>
+            <li><strong>Rule scope</strong> can be bound to an entire portfolio or limited to specific symbols, giving fine-grained control.</li>
+            <li><strong>Alert dispatch</strong> routes to terminal output, WebSocket push, Slack webhook, or email — configurable per severity.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── Key Achievements ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Design Highlights</h2>
+        <p class="sub">Engineering decisions that make the system extensible and AI-ready</p>
+
+        <div class="highlight-box">
+          <ul>
+            <li><strong>AI-native manifest endpoint</strong> — <code>GET /api/v1/manifest</code> returns a machine-readable capability map, allowing OpenClaw to discover available strategies, skills, and commands without prior knowledge of the API.</li>
+            <li><strong>Unified broker interface</strong> — swapping from simulated to paper to live Alpaca is a one-line config change; all strategy and monitoring code runs identically across modes.</li>
+            <li><strong>Sandboxed rule execution</strong> — custom Python rules undergo AST-level validation before <code>exec()</code>, blocking dangerous imports and builtins; enables safe user-defined logic in a web editor.</li>
+            <li><strong>Full async stack</strong> — FastAPI, SQLAlchemy 2.0 (async), and data providers all use <code>asyncio</code>; the engine's <code>asyncio.TaskGroup</code> runs strategy loops, monitoring, and snapshot refreshes concurrently.</li>
+            <li><strong>Three-surface access</strong> — every operation available on CLI, REST API, and web UI ensures OpenClaw can call any function while human traders have a visual interface for the same workflows.</li>
+            <li><strong>Plugin architecture</strong> — strategies, monitor rules, and research skills auto-discovered at startup via <code>pkgutil</code>; adding a new strategy requires only a new file in the <code>builtin/</code> directory.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── Development Roadmap ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Development Roadmap</h2>
+        <p class="sub">Current progress and planned milestones for this ongoing project</p>
+
+        <div class="roadmap-grid">
+          <div class="roadmap-card">
+            <div class="roadmap-phase done">✓ Phase 1 — Foundation</div>
+            <div class="roadmap-title">Core Architecture</div>
+            <ul class="roadmap-items">
+              <li class="done-item"><span>✓</span> 3-layer async architecture (CLI / API / Web)</li>
+              <li class="done-item"><span>✓</span> Alpaca paper + live broker adapter</li>
+              <li class="done-item"><span>✓</span> Strategy registry + plugin discovery</li>
+              <li class="done-item"><span>✓</span> 4 builtin trading strategies</li>
+              <li class="done-item"><span>✓</span> Event-driven backtest engine</li>
+              <li class="done-item"><span>✓</span> Pre-trade risk manager + audit log</li>
+            </ul>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="roadmap-phase active">▶ Phase 2 — Intelligence (Active)</div>
+            <div class="roadmap-title">AI &amp; Scanner</div>
+            <ul class="roadmap-items">
+              <li class="done-item"><span>✓</span> W-Bottom pattern scanner (S&amp;P 500 universe)</li>
+              <li class="done-item"><span>✓</span> OpenClaw research orchestrator (3 skills)</li>
+              <li class="done-item"><span>✓</span> 6 automated sell rules + sandbox editor</li>
+              <li class="done-item"><span>✓</span> AI manifest for autonomous agent discovery</li>
+              <li><span>→</span> Persistent DB wiring + Alembic migrations</li>
+              <li><span>→</span> Auto-buy signal execution from scanner</li>
+            </ul>
+          </div>
+
+          <div class="roadmap-card">
+            <div class="roadmap-phase next">○ Phase 3 — Production</div>
+            <div class="roadmap-title">Live Deployment</div>
+            <ul class="roadmap-items">
+              <li><span>○</span> API authentication + rate limiting</li>
+              <li><span>○</span> Alpaca real-time WebSocket streaming</li>
+              <li><span>○</span> Walk-forward optimizer (full implementation)</li>
+              <li><span>○</span> Multi-strategy portfolio allocation</li>
+              <li><span>○</span> TradingView charting integration</li>
+              <li><span>○</span> OpenClaw autonomous strategy authoring</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Tech Stack ── -->
+      <div class="detail-section animate-on-scroll">
+        <h2>Technology Stack</h2>
+        <p class="sub">Full-stack Python + Next.js architecture with AI and brokerage integrations</p>
+
+        <div class="card" style="padding:0; overflow:hidden;">
+          <table class="tech-table">
+            <tr>
+              <td>Backend Framework</td>
+              <td>FastAPI 0.115 (async) · Click 8.1 CLI · Rich console output · APScheduler</td>
+            </tr>
+            <tr>
+              <td>AI / LLM</td>
+              <td>Anthropic SDK (Claude Sonnet) · 3-skill research orchestrator · async parallel execution</td>
+            </tr>
+            <tr>
+              <td>Brokerage</td>
+              <td>alpaca-py 0.28 · Paper &amp; Live modes · Market / Limit / Stop / Stop-limit orders</td>
+            </tr>
+            <tr>
+              <td>Technical Analysis</td>
+              <td>pandas-ta · SMA 20/50/200 · RSI 14 · Bollinger Bands · Donchian Channels</td>
+            </tr>
+            <tr>
+              <td>Data &amp; ORM</td>
+              <td>yfinance · SQLAlchemy 2.0 (async) · SQLite / PostgreSQL · Parquet cache (TTL)</td>
+            </tr>
+            <tr>
+              <td>Frontend</td>
+              <td>Next.js 16 · shadcn/ui · Tailwind CSS · Monaco Editor (Python rule IDE)</td>
+            </tr>
+            <tr>
+              <td>Risk &amp; Security</td>
+              <td>Pre-trade validation · AST sandbox for custom rules · append-only audit logger</td>
+            </tr>
+            <tr>
+              <td>Notifications</td>
+              <td>Terminal (Rich) · WebSocket push · Slack webhook · Email (SMTP)</td>
+            </tr>
+            <tr>
+              <td>Config &amp; DevOps</td>
+              <td>Pydantic-settings · TOML + .env two-layer config · structlog · Docker Compose</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <footer style="text-align:center;padding:3rem 2rem;color:var(--text-muted);font-size:0.85rem;border-top:1px solid var(--border);margin-top:4rem;">
+    <p>Built by Chase (Ziyu) Chen ·
+      <a href="https://github.com/zxcjoy" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">GitHub</a> ·
+      <a href="https://linkedin.com/in/zxcjoy" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">LinkedIn</a>
+    </p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
