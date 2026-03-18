@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeadlineGo Case Study — Full Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    :root {
+      --sky: #4facfe;
+      --cyan: #00f2fe;
+      --sky-grad: linear-gradient(135deg, #4facfe, #00f2fe);
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--text-secondary); font-size: 0.9rem;
+      margin-bottom: 2.5rem; transition: var(--transition);
+    }
+    .back-link:hover { color: var(--sky); }
+
+    /* ── Report hero ── */
+    .report-hero {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2.5rem; margin-bottom: 3rem;
+    }
+    .report-label {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      color: var(--sky); letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .report-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800;
+      letter-spacing: -1px; line-height: 1.2; margin-bottom: 0.75rem;
+    }
+    .report-meta {
+      color: var(--text-muted); font-size: 0.85rem;
+      font-family: var(--font-mono); line-height: 1.8;
+    }
+
+    /* ── Section headings ── */
+    .report-section { margin-bottom: 3.5rem; }
+    .report-section h2 {
+      font-size: 1.35rem; font-weight: 700;
+      padding-bottom: 0.6rem; margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .report-section h2 .sec-num {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--sky); background: rgba(79,172,254,0.1);
+      border: 1px solid rgba(79,172,254,0.2);
+      padding: 0.15rem 0.55rem; border-radius: 4px; letter-spacing: 1px;
+    }
+    .report-section h3 {
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text-primary); margin: 1.5rem 0 0.6rem;
+    }
+    .report-section p {
+      color: var(--text-secondary); font-size: 0.92rem;
+      line-height: 1.85; margin-bottom: 0.9rem;
+    }
+
+    /* ── Callout / highlight card ── */
+    .callout {
+      background: rgba(79,172,254,0.05);
+      border: 1px solid rgba(79,172,254,0.15);
+      border-left: 3px solid var(--sky);
+      border-radius: var(--radius-sm); padding: 1.1rem 1.4rem;
+      margin: 1.25rem 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8;
+    }
+    .callout strong { color: var(--text-primary); }
+
+    /* ── Two-column interview grid ── */
+    .interview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0 1.5rem; }
+    .interview-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.2rem 1.3rem;
+      transition: var(--transition);
+    }
+    .interview-card:hover { border-color: rgba(79,172,254,0.25); }
+    .interview-name { font-weight: 700; font-size: 0.92rem; margin-bottom: 0.2rem; }
+    .interview-role { font-family: var(--font-mono); font-size: 0.72rem; color: var(--sky); margin-bottom: 0.6rem; }
+    .interview-detail { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.65; }
+
+    /* ── Competitor table ── */
+    .comp-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0 1.5rem; }
+    .comp-table th {
+      text-align: left; padding: 0.6rem 1rem;
+      font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--sky);
+      border-bottom: 1px solid rgba(79,172,254,0.2);
+    }
+    .comp-table td {
+      padding: 0.7rem 1rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); vertical-align: top;
+    }
+    .comp-table tr:last-child td { border-bottom: none; }
+    .comp-table tr:hover td { background: rgba(79,172,254,0.02); }
+    .comp-type {
+      font-size: 0.68rem; font-family: var(--font-mono);
+      padding: 0.1rem 0.5rem; border-radius: 4px;
+    }
+    .comp-type.direct { background: rgba(79,172,254,0.12); color: var(--sky); border: 1px solid rgba(79,172,254,0.25); }
+    .comp-type.indirect { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border); }
+
+    /* ── Feature list ── */
+    .feature-list { list-style: none; margin: 0.5rem 0 1.5rem; }
+    .feature-list li {
+      display: flex; gap: 0.75rem; align-items: flex-start;
+      padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65;
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feat-num {
+      font-family: var(--font-mono); font-size: 0.72rem; color: var(--sky);
+      font-weight: 700; min-width: 28px; padding-top: 0.1rem; flex-shrink: 0;
+    }
+    .feat-name { font-weight: 600; color: var(--text-primary); }
+
+    /* ── Hypothesis table ── */
+    .hyp-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0 1.5rem; }
+    .hyp-table th {
+      text-align: left; padding: 0.6rem 1rem;
+      font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--sky);
+      border-bottom: 1px solid rgba(79,172,254,0.2);
+    }
+    .hyp-table td {
+      padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); vertical-align: top; line-height: 1.65;
+    }
+    .hyp-table tr:last-child td { border-bottom: none; }
+    .hyp-table tr:hover td { background: rgba(79,172,254,0.02); }
+    .verdict {
+      font-size: 0.72rem; font-family: var(--font-mono); font-weight: 700;
+      white-space: nowrap; padding: 0.15rem 0.55rem; border-radius: 4px;
+    }
+    .verdict.success { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+    .verdict.revised { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+
+    /* ── Prototype screens ── */
+    .screens-list { columns: 2; gap: 1rem; margin: 0.5rem 0 1.5rem; list-style: none; }
+    .screens-list li {
+      font-size: 0.87rem; color: var(--text-secondary);
+      padding: 0.3rem 0; display: flex; gap: 0.5rem; break-inside: avoid;
+    }
+    .screens-list li span { color: var(--sky); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
+
+    /* ── Next steps ── */
+    .next-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .next-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.1rem 1.3rem;
+      border-top: 2px solid var(--sky);
+    }
+    .next-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--sky); margin-bottom: 0.4rem; }
+    .next-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .next-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ── Business model ── */
+    .bmc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .bmc-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1rem 1.2rem;
+    }
+    .bmc-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--sky); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem; }
+    .bmc-content { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.65; }
+
+    /* ── Report figures ── */
+    .report-figure { margin: 1.75rem 0 2rem; }
+    .report-figure img {
+      width: 100%; border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+      display: block;
+    }
+    .report-figure figcaption {
+      text-align: center; font-size: 0.76rem;
+      color: var(--text-muted); font-family: var(--font-mono);
+      margin-top: 0.65rem; font-style: italic; letter-spacing: 0.3px;
+    }
+    .figure-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.75rem 0 2rem; }
+    .figure-row .report-figure { margin: 0; }
+
+    @media (max-width: 768px) {
+      .interview-grid { grid-template-columns: 1fr; }
+      .next-grid { grid-template-columns: 1fr; }
+      .bmc-grid { grid-template-columns: 1fr; }
+      .screens-list { columns: 1; }
+      .figure-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+  <div class="glow-orb"></div>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-logo"><span>&lt;ZC /&gt;</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../experience.html">Experience</a></li>
+      <li><a href="../projects.html" class="active">Projects</a></li>
+      <li><a href="../skills.html">Skills</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="main-content">
+    <section class="section">
+
+      <a href="multimodal-task.html" class="back-link">← Back to Project</a>
+
+      <!-- ── Report Hero ── -->
+      <div class="report-hero animate-on-scroll">
+        <div class="report-label">// Full Case Study Report</div>
+        <h1 class="report-title">DeadlineGo — Product Case Study</h1>
+        <div class="report-meta">
+          DSCI 556 · Prof. Chan · Dec 2024<br>
+          Group 5 · Xindan Zhang · Yixin Zhang · Yunning Chen · Ziyu Chen
+        </div>
+      </div>
+
+      <!-- ── 1. Introduction ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">01</span> Introduction</h2>
+        <p>
+          DeadlineGo, conceptualized in November 2024, offers a streamlined, one-click assignment management experience designed to reduce friction and improve time management for college students. The product addresses a fragmented academic ecosystem where students routinely juggle four to six separate platforms — Brightspace, Gradescope, DEN, GitHub, course websites, and professor portals — with no unified view of their deadlines.
+        </p>
+        <div class="callout">
+          <strong>Core premise:</strong> Centralizing assignment submissions via a single platform, augmented by AI-powered extraction from screenshots, to eliminate the manual overhead of deadline tracking.
+        </div>
+      </div>
+
+      <!-- ── 2. Problem Statement ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">02</span> Problem Statement</h2>
+        <p>
+          Students struggle with managing multiple deadlines across different subjects. Missing deadlines or juggling too many assignments negatively impacts academic performance and mental well-being. The problem is compounded by platform fragmentation — each institution deploys a different combination of LMS and supplementary tools, creating no single source of truth for a student's workload.
+        </p>
+        <p>
+          Initial customer discovery surfaced three recurring pain points: (1) the cognitive overhead of checking multiple platforms daily, (2) missed deadlines caused by platform outages or notification fatigue, and (3) the absence of any intelligent prioritization layer that accounts for workload density across subjects.
+        </p>
+      </div>
+
+      <!-- ── 3. Customer Discovery ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">03</span> Customer Discovery &amp; Validation</h2>
+        <p>
+          Three in-depth discovery interviews were conducted with USC students spanning different majors, course loads, and time management habits. Key themes were synthesized via an empathy map covering what students think, feel, say, and do around deadline management.
+        </p>
+
+        <div class="interview-grid">
+          <div class="interview-card">
+            <div class="interview-name">Anay Limaye</div>
+            <div class="interview-role">Bioengineering · 3rd Year · 6 courses</div>
+            <div class="interview-detail">Works in the dining hall. Checks schedule 10+ times per week. Struggles with DEN, Brightspace, Gradescope, GitHub, and professor websites simultaneously. Has missed deadlines due to platform outages.</div>
+          </div>
+          <div class="interview-card">
+            <div class="interview-name">Sabrina Fong</div>
+            <div class="interview-role">Biomedical Engineering · 3rd Year · 6 courses</div>
+            <div class="interview-detail">Checks platforms 1–4 times per week. Manually consolidates tasks into personal to-do lists — a workaround that is effective but time-consuming and error-prone.</div>
+          </div>
+          <div class="interview-card">
+            <div class="interview-name">Participant 3</div>
+            <div class="interview-role">Applied Mathematics · 2nd Year · 4 courses</div>
+            <div class="interview-detail">Runs a startup 20+ hours per week alongside coursework. Uses Apple Reminders. Misses deadlines every 2–3 months despite being generally strong at time management.</div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Key finding:</strong> All three participants occasionally miss deadlines, and all currently use manual or fragmented workarounds. This validated the need for a centralized, automated solution — and confirmed willingness to adopt a dedicated tool.
+        </div>
+
+        <figure class="report-figure">
+          <img src="../pics/deadlinego/image1.png" alt="Empathy Map">
+          <figcaption>Figure 1 — Empathy Map: synthesis of customer discovery across Think &amp; Feel, Gains, Pains, Say, Do, and See dimensions</figcaption>
+        </figure>
+
+        <figure class="report-figure">
+          <img src="../pics/deadlinego/image2.png" alt="User Persona — Amanda">
+          <figcaption>Figure 2 — Provisional Persona: Amanda, an undergraduate student balancing multiple classes and a part-time job</figcaption>
+        </figure>
+      </div>
+
+      <!-- ── 4. Competitive Analysis ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">04</span> Competitive Research &amp; Analysis</h2>
+        <p>
+          Twelve competitors were benchmarked across direct and indirect categories. The analysis revealed that while general productivity tools are abundant, none are specifically tailored to the academic deadline management use case with AI-assisted import.
+        </p>
+
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Products</th>
+              <th>Gap</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="comp-type direct">Direct</span></td>
+              <td>Todoist, iPhone Reminders, Google Calendar, Motion, Sunsama, Notion</td>
+              <td>No academic-specific tracking; no AI screenshot import; no submission link management</td>
+            </tr>
+            <tr>
+              <td><span class="comp-type indirect">Indirect</span></td>
+              <td>Physical Calendar, ClickUp, Trello, Square Go, D2L Brightspace Pulse, Airtable</td>
+              <td>Either too generic or too narrowly scoped to one institution's LMS</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          Google Calendar and iPhone Reminders dominate daily usage among students but lack academic-specific deadline tracking. This leaves a significant gap for a dedicated student productivity tool with AI capabilities.
+        </p>
+        <div class="callout">
+          <strong>Strategic opportunity:</strong> Enhanced AI task automation and academic collaboration — deployed under a freemium model with premium AI and collaboration features as the monetization layer.
+        </div>
+      </div>
+
+      <!-- ── 5. Feature Definition ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">05</span> Feature Definition</h2>
+        <p>Eight core features were defined through synthesis of interview insights, competitive gaps, and design iteration. Features are ranked by strategic priority.</p>
+
+        <ul class="feature-list">
+          <li>
+            <span class="feat-num">F1 ★</span>
+            <div><span class="feat-name">Automatic Information Retrieval from Screenshot</span> — One-click VLM-powered extraction of task name, course, due date, and submission URL from any assignment screenshot. Identified as the product's "secret recipe."</div>
+          </li>
+          <li>
+            <span class="feat-num">F2</span>
+            <div><span class="feat-name">Customizable Notifications</span> — Per-task deadline reminders with configurable schedules and a notification archive for historical reference.</div>
+          </li>
+          <li>
+            <span class="feat-num">F3</span>
+            <div><span class="feat-name">Smart Evaluation &amp; Recommendation (AI Chatbot)</span> — Conversational LLM interface for workload prioritization, study time suggestions, and weekly learning pattern summaries.</div>
+          </li>
+          <li>
+            <span class="feat-num">F4</span>
+            <div><span class="feat-name">List View with Custom Ranking &amp; Grouping</span> — Sortable, filterable task list with user-defined grouping criteria (by course, due date, priority).</div>
+          </li>
+          <li>
+            <span class="feat-num">F5</span>
+            <div><span class="feat-name">Calendar View for Due Dates</span> — Visual calendar mapping all deadlines across courses for at-a-glance workload awareness.</div>
+          </li>
+          <li>
+            <span class="feat-num">F6</span>
+            <div><span class="feat-name">Manual Details Modification</span> — Editable fields for all AI-extracted metadata, enabling user correction and customization.</div>
+          </li>
+          <li>
+            <span class="feat-num">F7 ★</span>
+            <div><span class="feat-name">Link to Submission Page</span> — Auto-extracted direct link to the assignment submission page, enabling one-click submission navigation.</div>
+          </li>
+          <li>
+            <span class="feat-num">F8</span>
+            <div><span class="feat-name">Progress Tracking</span> — Percentage-based completion notation per task. Milestones award coins redeemable for UI themes (dark, forest, ocean), gamifying on-time submission behavior.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── 6. Design Iterations ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">06</span> Design Iterations &amp; Prototype</h2>
+        <p>
+          An interactive Figma prototype was developed from scratch across 15 screens, covering the complete task lifecycle from initial import through submission and progress review. The prototype underwent two major iterations: the initial version following feature definition, and a revised version incorporating changes from user research findings.
+        </p>
+
+        <h3>User Journey Storyboards</h3>
+        <p>Two scenarios were storyboarded to map the full emotional arc of a user — from discovering the problem through achieving a successful submission.</p>
+
+        <figure class="report-figure">
+          <img src="../pics/deadlinego/image15.png" alt="User Journey Storyboard — Scenario 1">
+          <figcaption>Figure 3 — Scenario 1: A new user discovers DeadlineGo, syncs assignments from school platforms, uses AI prioritization, and submits on time</figcaption>
+        </figure>
+
+        <figure class="report-figure">
+          <img src="../pics/deadlinego/image16.png" alt="User Journey Storyboard — Scenario 2">
+          <figcaption>Figure 4 — Scenario 2: An existing user receives a changed deadline via email, updates it in the app, and AI reminders keep them accountable until submission</figcaption>
+        </figure>
+
+        <div class="figure-row">
+          <figure class="report-figure">
+            <img src="../pics/deadlinego/image17.png" alt="Hand-drawn storyboard — Scenario 1">
+            <figcaption>Figure 5 — Hand-drawn storyboard: professor announces assignment → user screenshots it → DeadlineGo auto-creates a task → user submits on time</figcaption>
+          </figure>
+          <figure class="report-figure">
+            <img src="../pics/deadlinego/image18.png" alt="Hand-drawn storyboard — Scenario 2">
+            <figcaption>Figure 6 — Hand-drawn storyboard: deadline is changed → user updates in app → AI nudges user to start early → submission confirmed</figcaption>
+          </figure>
+        </div>
+
+        <h3>15-Screen Prototype</h3>
+        <ul class="screens-list">
+          <li><span>01</span> List View &amp; Homepage</li>
+          <li><span>02</span> Calendar View</li>
+          <li><span>03</span> Task Detail View</li>
+          <li><span>04</span> Task Detail Editing</li>
+          <li><span>05</span> Task Notes</li>
+          <li><span>06</span> Task Progress</li>
+          <li><span>07</span> Progress — Adding Notes</li>
+          <li><span>08</span> Task Submission</li>
+          <li><span>09</span> Submission Congratulations</li>
+          <li><span>10</span> Settings — Login Page</li>
+          <li><span>11</span> Settings — Theme Page</li>
+          <li><span>12</span> Settings — Billing Page</li>
+          <li><span>13</span> Notification Archive</li>
+          <li><span>14</span> AI Chatbot</li>
+          <li><span>15</span> Weekly Summary</li>
+        </ul>
+
+        <div class="callout">
+          Settings — Theme Page features three purchasable themes (dark, forest, ocean) unlocked with coins earned from on-time task submissions. Settings — Billing offers free, pro, and yearly subscription tiers.
+        </div>
+
+        <div style="margin-top:1.25rem;">
+          <a href="https://www.figma.com/proto/IuXEnZierzhcDWoapLbjzk/INTERACTIVE-PROTOTYPE?node-id=115-4&node-type=frame&t=N0tGibly8VksOROP-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=115%3A4"
+             target="_blank" rel="noopener noreferrer" class="btn btn-primary"
+             style="display:inline-flex;">🎨 Open Interactive Prototype →</a>
+        </div>
+      </div>
+
+      <!-- ── 7. User Research ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">07</span> User Research Study</h2>
+        <p>
+          A formal usability study was conducted with 8 participants to validate the product's core hypotheses. Two scenario walkthroughs were tested: a new user discovering the app and completing a full assignment import cycle, and an existing user managing a changed deadline with AI reminders.
+        </p>
+
+        <table class="hyp-table">
+          <thead>
+            <tr>
+              <th>Hypothesis</th>
+              <th>Focus</th>
+              <th>Finding</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-family:var(--font-mono);color:var(--sky);font-size:0.78rem;white-space:nowrap;">H1</td>
+              <td style="font-weight:600;color:var(--text-primary);">Value Proposition</td>
+              <td>Strong interest in centralized task management. Exceeded the 70% interest threshold across all participants.</td>
+              <td><span class="verdict success">✓ SUCCESS</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--font-mono);color:var(--sky);font-size:0.78rem;white-space:nowrap;">H2</td>
+              <td style="font-weight:600;color:var(--text-primary);">Business Model</td>
+              <td>Minimal interest in paid subscription; users prefer free + ads. Pivoted to freemium with premium AI features behind paywall.</td>
+              <td><span class="verdict revised">↻ REVISED</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--font-mono);color:var(--sky);font-size:0.78rem;white-space:nowrap;">H3</td>
+              <td style="font-weight:600;color:var(--text-primary);">One-Click Entry</td>
+              <td>Overwhelming support. Designated the product's "secret recipe." No direct competitor offers this for academic deadlines.</td>
+              <td><span class="verdict success">★ HIGH PRI</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--font-mono);color:var(--sky);font-size:0.78rem;white-space:nowrap;">H4</td>
+              <td style="font-weight:600;color:var(--text-primary);">AI Time Estimation</td>
+              <td>Mixed feedback; users skeptical of AI accuracy. Rebranded as interactive AI Chatbot, emphasizing conversation over automated prediction.</td>
+              <td><span class="verdict revised">↻ REBRANDED</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--font-mono);color:var(--sky);font-size:0.78rem;white-space:nowrap;">H5</td>
+              <td style="font-weight:600;color:var(--text-primary);">Submission Link</td>
+              <td>High interest. Promoted to a prominently showcased feature in all demo sessions due to strong positive reception.</td>
+              <td><span class="verdict success">✓ SUCCESS</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ── 8. Post-Research Design Updates ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">08</span> Post-Research Design Iteration</h2>
+        <p>Following the user research study, several targeted design changes were implemented to address the findings:</p>
+        <ul class="feature-list">
+          <li><span class="feat-num">→</span><div>Standardized interface color scheme across all screens for visual consistency</div></li>
+          <li><span class="feat-num">→</span><div>Added a dedicated notes section to the task editing flow</div></li>
+          <li><span class="feat-num">→</span><div>Introduced monthly and annual subscription plan options on the billing screen</div></li>
+          <li><span class="feat-num">→</span><div>Added AI-powered link-to-summary feature — converts a submission URL into a task summary</div></li>
+          <li><span class="feat-num">→</span><div>Introduced weekly reports with AI-generated learning pattern analysis as a premium feature</div></li>
+          <li><span class="feat-num">→</span><div>Added deeper knowledge gap analysis as a premium AI capability to justify the paid tier</div></li>
+        </ul>
+      </div>
+
+      <!-- ── 9. Business Model ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">09</span> Business Model</h2>
+        <p>The business model evolved from a direct subscription model to a freemium structure following user research, which revealed strong price sensitivity among the student demographic.</p>
+
+        <div class="bmc-grid">
+          <div class="bmc-card">
+            <div class="bmc-label">Customer Segments</div>
+            <div class="bmc-content">Undergraduate students managing deadlines across multiple academic platforms simultaneously</div>
+          </div>
+          <div class="bmc-card">
+            <div class="bmc-label">Value Proposition</div>
+            <div class="bmc-content">One-click screenshot import · centralized deadline view · AI prioritization · direct submission links</div>
+          </div>
+          <div class="bmc-card">
+            <div class="bmc-label">Revenue Streams</div>
+            <div class="bmc-content">Free tier (ads) + Premium tier (deeper AI analysis, weekly learning reports, knowledge gap identification)</div>
+          </div>
+          <div class="bmc-card">
+            <div class="bmc-label">Key Partners</div>
+            <div class="bmc-content">Educational institutions · LMS providers · AI API providers · Student community organizations</div>
+          </div>
+          <div class="bmc-card">
+            <div class="bmc-label">Unfair Advantage</div>
+            <div class="bmc-content">Academic-specific AI import pipeline — no direct competitor offers VLM-powered screenshot-to-task conversion for students</div>
+          </div>
+          <div class="bmc-card">
+            <div class="bmc-label">Channels</div>
+            <div class="bmc-content">Academic institution partnerships · student community outreach · peer referral · app store distribution</div>
+          </div>
+        </div>
+
+        <div class="figure-row">
+          <figure class="report-figure">
+            <img src="../pics/deadlinego/image34.png" alt="Business Model Canvas">
+            <figcaption>Figure 7 — Business Model Canvas: key partners, activities, resources, value propositions, customer relationships, channels, segments, cost structure, and revenue streams</figcaption>
+          </figure>
+          <figure class="report-figure">
+            <img src="../pics/deadlinego/image35.png" alt="Lean Canvas">
+            <figcaption>Figure 8 — Lean Canvas: problem, solution, unique value proposition, unfair advantage, customer segments, key metrics, channels, cost structure, and revenue streams</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- ── 10. Reflection & Next Steps ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">10</span> Reflection &amp; Next Steps</h2>
+        <p>
+          User research confirmed strong product-market fit for the core import and submission link features, while surfacing a critical insight: students are skeptical of opaque AI outputs. The AI chatbot pivot — from deterministic time estimator to conversational interface — directly addressed this concern and improved perceived trustworthiness.
+        </p>
+        <p>
+          Key positive feedback centered on the task import feature and the submission link feature. The primary concern raised was around AI accuracy, which was addressed through the chatbot rebranding and emphasis on interactivity over automation.
+        </p>
+
+        <div class="next-grid">
+          <div class="next-card">
+            <div class="next-num">Next Step 01</div>
+            <div class="next-title">Develop &amp; Validate AI Features</div>
+            <div class="next-desc">Build trust in AI capabilities through transparent confidence indicators, editable suggestions, and iterative improvement based on user correction data.</div>
+          </div>
+          <div class="next-card">
+            <div class="next-num">Next Step 02</div>
+            <div class="next-title">Enhance Collaboration Tools</div>
+            <div class="next-desc">Develop shared task views and group assignment tracking to address the collaboration gap identified in competitive analysis.</div>
+          </div>
+          <div class="next-card">
+            <div class="next-num">Next Step 03</div>
+            <div class="next-title">Optimize UI for Seamlessness</div>
+            <div class="next-desc">Reduce friction in the import-to-task flow, streamline notification configuration, and polish the mobile-first experience.</div>
+          </div>
+          <div class="next-card">
+            <div class="next-num">Next Step 04</div>
+            <div class="next-title">Institution &amp; Community Outreach</div>
+            <div class="next-desc">Partner with academic institutions for LMS integration and expand reach through student organization networks and peer referral programs.</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <footer style="text-align:center;padding:3rem 2rem;color:var(--text-muted);font-size:0.85rem;border-top:1px solid var(--border);margin-top:4rem;">
+    <p>DeadlineGo Case Study · DSCI 556, USC · Dec 2024 ·
+      <a href="multimodal-task.html" style="color:var(--accent);">← Back to Project Page</a>
+    </p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

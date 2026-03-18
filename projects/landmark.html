@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landmark Classification — Chase (Ziyu) Chen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    :root {
+      --lm-a: #f7971e;
+      --lm-b: #f54ea2;
+      --lm-grad: linear-gradient(135deg, #f7971e, #f54ea2);
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--text-secondary); font-size: 0.9rem;
+      margin-bottom: 2.5rem; transition: var(--transition);
+    }
+    .back-link:hover { color: var(--lm-a); }
+
+    /* ── Hero ── */
+    .proj-hero {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2.5rem; margin-bottom: 3rem;
+    }
+    .proj-label {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      color: var(--lm-a); letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .proj-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800;
+      letter-spacing: -1px; line-height: 1.2; margin-bottom: 0.75rem;
+    }
+    .proj-meta {
+      color: var(--text-muted); font-size: 0.85rem;
+      font-family: var(--font-mono); line-height: 1.8;
+    }
+    .hero-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+
+    /* ── Metrics row ── */
+    .metrics-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1rem; margin: 2rem 0 3rem;
+    }
+    .metric-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem 1rem; text-align: center;
+      border-top: 2px solid var(--lm-a);
+    }
+    .metric-val {
+      font-size: 2rem; font-weight: 800; font-family: var(--font-mono);
+      background: var(--lm-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.1; margin-bottom: 0.35rem;
+    }
+    .metric-label { font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 0.5px; }
+
+    /* ── Section headings ── */
+    .report-section { margin-bottom: 3.5rem; }
+    .report-section h2 {
+      font-size: 1.35rem; font-weight: 700;
+      padding-bottom: 0.6rem; margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .report-section h2 .sec-num {
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--lm-a); background: rgba(247,151,30,0.1);
+      border: 1px solid rgba(247,151,30,0.2);
+      padding: 0.15rem 0.55rem; border-radius: 4px; letter-spacing: 1px;
+    }
+    .report-section h3 {
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text-primary); margin: 1.5rem 0 0.6rem;
+    }
+    .report-section p {
+      color: var(--text-secondary); font-size: 0.92rem;
+      line-height: 1.85; margin-bottom: 0.9rem;
+    }
+
+    /* ── Callout ── */
+    .callout {
+      background: rgba(247,151,30,0.05);
+      border: 1px solid rgba(247,151,30,0.15);
+      border-left: 3px solid var(--lm-a);
+      border-radius: var(--radius-sm); padding: 1.1rem 1.4rem;
+      margin: 1.25rem 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8;
+    }
+    .callout strong { color: var(--text-primary); }
+
+    /* ── Sample image grid ── */
+    .sample-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.85rem; margin: 1.5rem 0;
+    }
+    .sample-item { position: relative; border-radius: 10px; overflow: hidden; aspect-ratio: 4/3; }
+    .sample-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block; transition: transform 0.3s ease;
+    }
+    .sample-item:hover img { transform: scale(1.04); }
+    .sample-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      padding: 0.6rem 0.75rem 0.65rem;
+    }
+    .sample-cat {
+      font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--lm-a); display: block; margin-bottom: 0.1rem;
+    }
+    .sample-name { font-size: 0.78rem; font-weight: 600; color: #fff; }
+
+    /* ── Augmentation strip ── */
+    .aug-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem; margin: 1.5rem 0;
+    }
+    .aug-item { text-align: center; }
+    .aug-item img {
+      width: 100%; border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .aug-label {
+      margin-top: 0.5rem; font-size: 0.72rem;
+      font-family: var(--font-mono); color: var(--text-muted); font-style: italic;
+    }
+
+    /* ── Architecture diagram ── */
+    .arch-fig { margin: 1.75rem 0 2rem; }
+    .arch-fig img {
+      max-width: 640px; width: 100%; display: block; margin: 0 auto;
+      border-radius: 10px; border: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    }
+    .arch-fig figcaption {
+      text-align: center; font-size: 0.76rem;
+      color: var(--text-muted); font-family: var(--font-mono);
+      margin-top: 0.65rem; font-style: italic;
+    }
+
+    /* ── Results table ── */
+    .results-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0 1.5rem; }
+    .results-table th {
+      text-align: left; padding: 0.6rem 1rem;
+      font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--lm-a);
+      border-bottom: 1px solid rgba(247,151,30,0.2);
+    }
+    .results-table td {
+      padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary); vertical-align: middle;
+    }
+    .results-table tr:last-child td { border-bottom: none; }
+    .results-table tr:hover td { background: rgba(247,151,30,0.02); }
+    .f1-val {
+      font-family: var(--font-mono); font-weight: 700; font-size: 0.92rem;
+    }
+    .f1-high { color: #22c55e; }
+    .f1-mid  { color: #fbbf24; }
+
+    /* ── Tech stack ── */
+    .tech-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0; }
+    .tech-table th {
+      text-align: left; padding: 0.55rem 1rem;
+      font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--lm-a);
+      border-bottom: 1px solid rgba(247,151,30,0.2);
+    }
+    .tech-table td {
+      padding: 0.65rem 1rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .tech-table tr:last-child td { border-bottom: none; }
+
+    @media (max-width: 768px) {
+      .metrics-row { grid-template-columns: repeat(2, 1fr); }
+      .sample-grid  { grid-template-columns: repeat(2, 1fr); }
+      .aug-strip    { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+  <div class="glow-orb"></div>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-logo"><span>&lt;ZC /&gt;</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../experience.html">Experience</a></li>
+      <li><a href="../projects.html" class="active">Projects</a></li>
+      <li><a href="../skills.html">Skills</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="main-content">
+    <section class="section">
+
+      <a href="../projects.html" class="back-link">← Back to Projects</a>
+
+      <!-- ── Hero ── -->
+      <div class="proj-hero animate-on-scroll">
+        <div class="proj-label">// deep learning · computer vision · DSCI 552 · USC</div>
+        <h1 class="proj-title">Multi-Level Landmark Image Classification</h1>
+        <div class="proj-meta">
+          Jan 2023 — May 2023 &nbsp;·&nbsp; Group 20 &nbsp;·&nbsp; Zixin Shen · Yixin Zhang · Ziyu Chen
+        </div>
+        <div class="hero-tags">
+          <span class="tag tag-accent">PyTorch</span>
+          <span class="tag tag-accent">EfficientNet-B0</span>
+          <span class="tag tag-accent">Transfer Learning</span>
+          <span class="tag">Albumentations</span>
+          <span class="tag">StratifiedKFold</span>
+          <span class="tag">PyTorch Lightning</span>
+          <span class="tag">AdamW</span>
+        </div>
+      </div>
+
+      <!-- ── Metrics ── -->
+      <div class="metrics-row animate-on-scroll">
+        <div class="metric-card">
+          <div class="metric-val">0.95</div>
+          <div class="metric-label">Category F1</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">6</div>
+          <div class="metric-label">Style Classes</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">30</div>
+          <div class="metric-label">Landmarks</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">&lt;300</div>
+          <div class="metric-label">Training Samples</div>
+        </div>
+      </div>
+
+      <!-- ── 1. Overview ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">01</span> Project Overview</h2>
+        <p>
+          This project tackles a two-level landmark recognition challenge: given an image of a world landmark, predict both its <strong>architectural style category</strong> (coarse classification) and the <strong>specific landmark name</strong> (fine-grained classification) — simultaneously, within a single end-to-end neural network.
+        </p>
+        <p>
+          The core challenge is severe data scarcity. The dataset contains only 6 style categories, each comprising 5 landmarks with 14 images per landmark — roughly 420 images in total. Standard CNNs trained from scratch collapse into overfitting immediately at this scale. The solution: a modified <strong>EfficientNet-B0</strong> backbone with a custom dual-head architecture, combined with an aggressive Albumentations augmentation pipeline and StratifiedKFold cross-validation.
+        </p>
+        <div class="callout">
+          <strong>Key result:</strong> Category (style) F1 of <strong>0.9547 (train) / 0.6965 (validation)</strong> and an overall F1 of 0.9546 on the Vocareum grading platform — outperforming all baseline approaches despite the minimal dataset.
+        </div>
+      </div>
+
+      <!-- ── 2. Dataset ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">02</span> Dataset — Training Data Samples</h2>
+        <p>
+          The dataset (<code>Landmarks-v1_0</code>) spans 6 architectural style categories — Gothic, Modern, Mughal, NeoClassical, Pagodas, and Pyramids — with 5 specific landmarks per category and 14 labeled images per landmark. Representative samples from each category are shown below.
+        </p>
+
+        <div class="sample-grid">
+          <div class="sample-item">
+            <img src="../pics/landmark/samples/Gothic_ChartresCathedral.jpeg" alt="Chartres Cathedral — Gothic">
+            <div class="sample-overlay">
+              <span class="sample-cat">Gothic</span>
+              <span class="sample-name">Chartres Cathedral</span>
+            </div>
+          </div>
+          <div class="sample-item">
+            <img src="../pics/landmark/samples/Modern_CCTV_Headquarters.jpeg" alt="CCTV Headquarters — Modern">
+            <div class="sample-overlay">
+              <span class="sample-cat">Modern</span>
+              <span class="sample-name">CCTV Headquarters</span>
+            </div>
+          </div>
+          <div class="sample-item">
+            <img src="../pics/landmark/samples/Mughal_Bibi_Ka_Maqbara.jpeg" alt="Bibi Ka Maqbara — Mughal">
+            <div class="sample-overlay">
+              <span class="sample-cat">Mughal</span>
+              <span class="sample-name">Bibi Ka Maqbara</span>
+            </div>
+          </div>
+          <div class="sample-item">
+            <img src="../pics/landmark/samples/NeoClassical_Academy_of_Athens.jpg" alt="Academy of Athens — NeoClassical">
+            <div class="sample-overlay">
+              <span class="sample-cat">NeoClassical</span>
+              <span class="sample-name">Academy of Athens</span>
+            </div>
+          </div>
+          <div class="sample-item">
+            <img src="../pics/landmark/samples/Pagodas_FogongTemplePagoda.jpg" alt="Fogong Temple Pagoda — Pagodas">
+            <div class="sample-overlay">
+              <span class="sample-cat">Pagodas</span>
+              <span class="sample-name">Fogong Temple Pagoda</span>
+            </div>
+          </div>
+          <div class="sample-item">
+            <img src="../pics/landmark/samples/Pyramids_El_Castillo,_Chichen_Itza.jpg" alt="El Castillo — Pyramids">
+            <div class="sample-overlay">
+              <span class="sample-cat">Pyramids</span>
+              <span class="sample-name">El Castillo, Chichen Itza</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Dataset structure:</strong> 6 categories × 5 landmarks × 14 images = ~420 labeled samples. This extreme scarcity — roughly 70 images per category — makes training any deep network a significant engineering challenge.
+        </div>
+      </div>
+
+      <!-- ── 3. Data Preprocessing ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">03</span> Data Preprocessing &amp; Augmentation</h2>
+        <p>
+          To counteract overfitting on the tiny dataset, a comprehensive image augmentation pipeline was engineered using the <strong>Albumentations</strong> library. Two classes of transforms were applied:
+        </p>
+        <ul style="color:var(--text-secondary);font-size:0.92rem;line-height:1.85;padding-left:1.25rem;margin-bottom:1rem;">
+          <li><strong>Pixel-level transforms</strong> — Blur (max kernel size 3, probability 0.2), RandomBrightnessContrast — alter pixel intensities without changing spatial structure</li>
+          <li><strong>Spatial-level transforms</strong> — HorizontalFlip, Rotate — change both pixel values and spatial layout (keypoints and masks)</li>
+          <li><strong>Normalization &amp; Resizing</strong> — Mean and standard deviation computed from the full Landmarks-v1_1 dataset pixel statistics</li>
+        </ul>
+        <p>
+          Data splitting used <strong>StratifiedKFold</strong> to ensure each fold maintains the same class distribution, preventing any single fold from being unrepresentative of the full label space.
+        </p>
+
+        <h3>Augmentation Pipeline — Visual Examples</h3>
+        <p>The same pagoda image through each stage of the augmentation pipeline:</p>
+
+        <div class="aug-strip">
+          <div class="aug-item">
+            <img src="../pics/landmark/image1.jpeg" alt="Original — before augmentation">
+            <div class="aug-label">Fig 1 — Original (before augmentation)</div>
+          </div>
+          <div class="aug-item">
+            <img src="../pics/landmark/image4.png" alt="After normalization">
+            <div class="aug-label">Fig 2 — After normalization</div>
+          </div>
+          <div class="aug-item">
+            <img src="../pics/landmark/image3.png" alt="After RandomBrightnessContrast">
+            <div class="aug-label">Fig 3 — After RandomBrightnessContrast</div>
+          </div>
+          <div class="aug-item">
+            <img src="../pics/landmark/image2.png" alt="After all augmentations">
+            <div class="aug-label">Fig 4 — After all augmentations</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 4. Model Architecture ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">04</span> Model Architecture — Dual-Head EfficientNet-B0</h2>
+        <p>
+          The model is built on the <strong>PyTorch Lightning</strong> framework using two core classes: <code>EffNet_B0</code> (the backbone + dual-head architecture) and <code>LitModule</code> (the training loop and evaluation logic).
+        </p>
+
+        <h3>Architecture Design</h3>
+        <p>
+          The EfficientNet-B0 backbone serves as a shared <strong>feature extractor</strong>, applying AdaptiveAvgPool2d and Flatten to produce a feature vector from any input image. This vector then branches into two independent classification heads:
+        </p>
+        <ul style="color:var(--text-secondary);font-size:0.92rem;line-height:1.85;padding-left:1.25rem;margin-bottom:1rem;">
+          <li><strong>Coarse Head</strong> (Category) — Linear → Dropout → Linear. Outputs one of 6 architectural style probabilities via Softmax.</li>
+          <li><strong>Fine Head</strong> (Landmark Name) — receives a concatenation of the EfficientNet features <em>and</em> the intermediate output of the first linear layer in the Coarse Head. This design passes coarse-level semantic context into the fine classification branch, allowing the landmark-name predictor to benefit from style awareness without gradient interference.</li>
+        </ul>
+        <p>
+          The Dropout layer in each head acts as a regularizer. The deliberate choice to concatenate the pre-Dropout output (rather than the post-Dropout) ensures no information loss when bridging the two branches.
+        </p>
+
+        <figure class="arch-fig">
+          <img src="../pics/landmark/image5.jpg" alt="Dual-Head EfficientNet-B0 Architecture Diagram">
+          <figcaption>Fig 5 — Model Architecture: EfficientNet-B0 Feature Extractor → Coarse Head (Category) + Fine Head (Landmark Name), with feature concatenation bridging the two branches</figcaption>
+        </figure>
+
+        <h3>Training Configuration</h3>
+        <p>
+          Loss: <strong>CrossEntropyLoss</strong> computed separately for coarse and fine tasks. Optimizer: <strong>AdamW</strong> with a <strong>StepLR</strong> learning rate scheduler to decay the learning rate during training. Evaluation metric: macro F1 score for both tasks.
+        </p>
+      </div>
+
+      <!-- ── 5. Results ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">05</span> Results</h2>
+        <p>
+          The model was evaluated on both training and validation splits, plus the held-out Vocareum grading platform. The category (style) task consistently outperforms the landmark name task — expected given the coarser label space.
+        </p>
+
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Split</th>
+              <th>F1 Score</th>
+              <th>Loss</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Category (Coarse)</td>
+              <td style="font-family:var(--font-mono);font-size:0.8rem;">Train</td>
+              <td><span class="f1-val f1-high">0.9547</span></td>
+              <td style="font-family:var(--font-mono);">0.1701</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Category (Coarse)</td>
+              <td style="font-family:var(--font-mono);font-size:0.8rem;">Validation</td>
+              <td><span class="f1-val f1-mid">0.6965</span></td>
+              <td style="font-family:var(--font-mono);">0.1237</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Landmark Name (Fine)</td>
+              <td style="font-family:var(--font-mono);font-size:0.8rem;">Train</td>
+              <td><span class="f1-val f1-high">0.8500</span></td>
+              <td style="font-family:var(--font-mono);">0.5259</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Landmark Name (Fine)</td>
+              <td style="font-family:var(--font-mono);font-size:0.8rem;">Validation</td>
+              <td><span class="f1-val f1-mid">0.5500</span></td>
+              <td style="font-family:var(--font-mono);">0.6751</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Overall (Combined)</td>
+              <td style="font-family:var(--font-mono);font-size:0.8rem;">Train</td>
+              <td><span class="f1-val f1-high">0.9033</span></td>
+              <td style="font-family:var(--font-mono);">0.3480</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Overall (Combined)</td>
+              <td style="font-family:var(--font-mono);font-size:0.8rem;">Validation</td>
+              <td><span class="f1-val f1-mid">0.6233</span></td>
+              <td style="font-family:var(--font-mono);">0.3994</td>
+            </tr>
+            <tr style="background:rgba(247,151,30,0.04);">
+              <td style="font-weight:600;color:var(--text-primary);">Category — Vocareum</td>
+              <td style="font-family:var(--font-mono);font-size:0.8rem;">Held-out test</td>
+              <td><span class="f1-val f1-high">0.9546</span></td>
+              <td>—</td>
+            </tr>
+            <tr style="background:rgba(247,151,30,0.04);">
+              <td style="font-weight:600;color:var(--text-primary);">Landmark — Vocareum</td>
+              <td style="font-family:var(--font-mono);font-size:0.8rem;">Held-out test</td>
+              <td><span class="f1-val f1-mid">0.6207</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <strong>Analysis:</strong> The train–validation F1 gap (e.g., 0.95 → 0.70 for category) reflects the inherent difficulty of generalizing from ~70 images per class. Crucially, the validation loss (0.12) is <em>lower</em> than training loss (0.17) for the category task — indicating the model is not overfitting in the classical sense, but rather that the validation set itself is too small to produce stable metrics. The held-out Vocareum score (0.9546) confirms the model's strong real-world category classification capability.
+        </div>
+      </div>
+
+      <!-- ── 6. Conclusion ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">06</span> Conclusion &amp; Future Work</h2>
+        <p>
+          The dual-head EfficientNet-B0 architecture demonstrated that it is possible to achieve high-quality simultaneous coarse and fine-grained classification under extreme data scarcity conditions. The Albumentations augmentation pipeline and StratifiedKFold splitting were essential components in controlling overfitting without requiring additional data collection.
+        </p>
+        <p>
+          The generalization gap between training and validation (particularly for landmark name prediction) is primarily attributable to dataset size. The landmark name task is inherently harder — 30 fine-grained classes versus 6 coarse categories — and 14 images per class is far below the sample count typically needed for reliable fine-grained feature learning.
+        </p>
+        <p>
+          Future directions identified in the study include: expanding the dataset through additional data collection or web scraping, exploring more advanced augmentation strategies (e.g., CutMix, MixUp), and investigating alternative architectures or multi-task fine-tuning strategies such as progressive resizing and domain-specific pre-training.
+        </p>
+      </div>
+
+      <!-- ── 7. Tech Stack ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">07</span> Tech Stack</h2>
+        <table class="tech-table">
+          <thead>
+            <tr><th>Category</th><th>Tool / Library</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Deep Learning</td>
+              <td style="font-family:var(--font-mono);">PyTorch · PyTorch Lightning</td>
+              <td>Model definition, training loop, evaluation</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Backbone</td>
+              <td style="font-family:var(--font-mono);">EfficientNet-B0 (torchvision)</td>
+              <td>Pre-trained feature extraction via transfer learning</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Augmentation</td>
+              <td style="font-family:var(--font-mono);">Albumentations</td>
+              <td>Pixel-level and spatial-level image transforms</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Validation Strategy</td>
+              <td style="font-family:var(--font-mono);">StratifiedKFold (scikit-learn)</td>
+              <td>Class-balanced cross-validation splits</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Optimizer</td>
+              <td style="font-family:var(--font-mono);">AdamW + StepLR</td>
+              <td>Weight-decayed Adam with LR scheduling</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Loss</td>
+              <td style="font-family:var(--font-mono);">CrossEntropyLoss</td>
+              <td>Separate loss computation per classification head</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Evaluation</td>
+              <td style="font-family:var(--font-mono);">Macro F1 Score</td>
+              <td>Task performance metric for both heads</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ── References ── -->
+      <div class="report-section animate-on-scroll">
+        <h2><span class="sec-num">Ref</span> Bibliography</h2>
+        <p style="font-size:0.85rem;">
+          Buslaev, A.; Iglovikov, V.I. et al. <em>Albumentations: Fast and Flexible Image Augmentations.</em> Information 2020, 11, 125.<br><br>
+          Li, Y.; Crandall, D.J.; Huttenlocher, D.P. <em>Landmark classification in large-scale image collections.</em> IEEE 12th International Conference on Computer Vision, Kyoto, 2009.<br><br>
+          Berrar, D. <em>Cross-Validation.</em> 2019, pp. 542–545.<br><br>
+          Tan, M.; Le, Q.V. <em>EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks.</em> arXiv:1905.11946, 2019.
+        </p>
+      </div>
+
+    </section>
+  </div>
+
+  <footer style="text-align:center;padding:3rem 2rem;color:var(--text-muted);font-size:0.85rem;border-top:1px solid var(--border);margin-top:4rem;">
+    <p>Multi-Level Landmark Classification · DSCI 552, USC · Jan–May 2023 ·
+      <a href="../projects.html" style="color:var(--lm-a);">← Back to Projects</a>
+    </p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
